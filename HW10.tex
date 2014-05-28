@@ -1,0 +1,239 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6108 HW 10}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+%PROBLEM 1
+\noindent
+(1) If we can find an unbiased estimator that is a function of complete sufficient statistics, then we will have found a UMVU estimator. We know from last semester that for any arbitrary CDF, the order statistics are a complete sufficient statistic. Hence, consider the following estimator for $\theta$:
+$$\delta = \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ind\{X_{(i)} \leq Y_{(i)}\}$$
+Since $\delta$ is a function of complete sufficient statistics, it suffices to show that $\delta$ is unbiased:
+$$\ex \delta = \ex[ \ex[\delta|Y_1,\dots,Y_m]]
+= \ex \biggl[ \ex \biggl[ \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ind\{X_{(i)} \leq Y_{(i)}\} \biggr| Y_1,\dots,Y_m \biggr] \biggr]$$
+$$= \ex\biggl[ \ex\biggl[ \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ind\{X_i \leq Y_j \} \biggr|Y_1,\dots,Y_m\biggr]\biggr]$$
+$$= \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ex[ \ex[ \ind\{X_i \leq Y_j \} |Y_1,\dots,Y_m]]
+= \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ex[ \prob\{X_i \leq Y_j |Y_1,\dots,Y_m \} ]$$
+$$= \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \ex[ F(Y_j) ]
+= \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m \int F dG
+=  \int F dG \frac{1}{nm}\sum_{i=1}^n \sum_{j=1}^m 1$$
+$$= \int F dG \biggl( \frac{nm}{nm} \biggr)
+= \theta. \hspace{5 pt} \square$$
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 2
+\noindent
+(2) Consider $\phi_T(X) = \ex[\phi(X)|T]$. Then it follows that:
+$$ \ex_\theta \phi_T(X) = \ex_\theta [ \ex[\phi(X)|T]] = \ex_\theta \phi(X)$$
+for all $\theta\in\Theta$. Hence, the significance level and the power of $\phi_T$ are equal to that of $\phi$. $\square$
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 3
+\pagebreak
+\noindent
+(3) From the Lemma in class, we need to find the least favorable distribution $\Lambda = q_0\delta_0+q_2\delta_2$, and we will have the MP level $\alpha$ test. Since the null is symmetric about the alternative, we should find $q_0 = q_2$. Then, according to the lemma our test should be:
+$$\phi(x) = \ind{\{ p_1(X) > q_0 p_0(X)+ q_2 p_2(X) \}}
+= \ind{\{ e^{\sum_{i=1}^n(x_i-1)^2/2} > q_0 e^{\sum_{i=1}^n(x_i)^2/2}+ q_2 e^{\sum_{i=1}^n(x_i-2)^2/2} \}}$$
+$$ = \ind{\{ e^{\sum_{i=1}^n(-x_i+1)/2} > q_0 + q_2 e^{\sum_{i=1}^n(-2x_i+4)/2} \}}
+= \ind{\{ e^{-n\bar{X}/2+n/2} > q_0 + q_2 e^{-n\bar{X}+2n} \}}$$
+$$= \ind\{ 1-K_1 < \bar{X} < 1+K_2\}$$
+
+\noindent
+such that $\ex_2[\phi(X)] = \ex_0[\phi(X)] = \alpha$. Due to the symmetry of the whole problem, we expect that $K_1 = K_2 = T$ so we will have that:
+$$\phi(X) = \ind\{ 1-T < \bar{X} < 1+T\}$$
+
+\noindent
+Then, since $\bar{X} \sim N(\theta,1/n)$, it follows that for any $\theta$, $\ex_\theta[\phi(X)]$ is just an integral of a $N(\theta,1/n)$ density over $[1-T, 1+T]$. Clearly, for the normal distribution, the integral over an interval of fixed length is maximized (with respect to the location of the interval) when the interval is symmetric with respect to $\theta$. Thus, the power is maximum for $\theta = 1$ because this is the midpoint of the interval $[1-T, 1+T]$. $\surd$\\
+
+\noindent
+As we keep the interval $[1-T,1+T]$ fixed, but decrease $\theta$, we find that the integral decreases to zero (i.e. $\ex_\theta\phi(X) < \ex_{\theta'}\phi(X)$ for $\theta < \theta' < 1$) since the interval lies in the right tail of the density. As we increase $\theta$, for $\theta>1$, the interval lies in the density's left tail, so the integral decreases to zero here as well (i.e. $\ex_\theta\phi(X) < \ex_{\theta'}\phi(X)$ for $\theta > \theta' > 1$). Hence, for $\theta < 1$, the power is increasing and for $\theta >1$ the power is decreasing. $\square$\\
+
+\noindent
+Note that this last fact implies that over $H_0$, the power takes its maximum at both $0$ and $2$, confirming that the least favorable distribution is $\Lambda = \frac{1}{2} \delta_0 + \frac{1}{2} \delta_2$. Hence, since $q_0=q_1$, it follows that the optimal test is indeed one that rejects when $\bar{X}$ lies in the symmetric interval $[1-T,1+T]$.
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 4
+\noindent
+(4) From the Lemma from class, we expect that the least favorable distribution is $\Lambda = q_0 \delta_0 + q_3 \delta_3$, since 0 and 3 the points in the null hypothesis closest to the alternative (i.e. are the hardest to differentiate from the alternative). Thus, we need to find $K_1$ and $K_2$ such that the test:
+$$\phi(X) = \ind\{ 1-K_1 < \bar{X} < 1+K_2\}$$
+satisfies level constraint $\ex_0[\phi(X)] = \ex_3[\phi(X)] = 0.05$.  Indeed, the results from the last problem confirm that since the power is increasing for $\theta < m$ and decreasing for $\theta > m$ (where $m$ denotes the midpoint of the interval $[1-K_1,1+K_2]$), we should have that (if $q_0$ and $q_3$ are chosen appropriately) under $H_0$, the power is maximized at $\theta\in\{0,3\}$.  Using the fact that $X_i \sim N(\theta,1)$ implies $\bar{X} \sim N(\theta,1/4)$ (Arian sent an email that $n=4$), this means we want:
+$$0.05 = \int_{1-K_1}^{1+K_2} \frac{1}{\sqrt{2\pi \cdot\frac{1}{4} }}e^{-\frac{x^2}{2\cdot 1/4}} dx
+=  \int_{1-K_1}^{1+K_2} \frac{1}{\sqrt{2\pi \frac{1}{4} }}e^{-\frac{(x-3)^2}{2\cdot 1/4}} dx$$
+Numerically we find that $K_1 = 0.177$ and $K_2 = 1.177$. Thus, our most powerful level 0.05 test is:
+$$\phi(X) = \ind\{ 1-0.177 < \bar{X} < 1+1.177\}
+= \ind\{ 0.863 < \bar{X} < 2.177\}. \hspace{5 pt} \square$$
+
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 5
+\pagebreak
+\noindent
+(5) We wish to prove Lemma 1 of Lecture 20. First not that under the Neyman Pearson framework we wish to find the solution to the following constrained maximization problem:
+$$\max_\phi \int \phi(x) g(x) d\mu(x)$$
+$$s.t. \int \phi(x) p_{\theta_i}(x)d\mu(x) \leq \alpha, \hspace{5 pt} i \in 1,2,\dots,K.$$
+
+\noindent
+This is then equivalent to a maximization under the Lagrangian framework:
+$$\max_\phi \int \phi(x) g(x) d\mu(x) - \sum_{i=1}^{K} c_i \biggl(\int \phi(x) p_{\theta_i}(x)d\mu(x) - \alpha \biggr)$$
+$$= \max_\phi \int \phi(x) \biggl[g(x)- \sum_{i=1}^{K} c_i p_{\theta_i}(x) \biggr]d\mu(x)+\sum_{i=1}^K c_i \alpha$$
+
+\noindent
+which yields the following solution:
+$$\phi(x) = \ind \biggl\{g(x)>\sum_{i=1}^Kc_i p_{\theta_i}(x) \biggr\} + \gamma \ind\biggl\{ g(x)=\sum_{i=1}^Kc_i p_{\theta_i}(x)\biggr\}$$
+
+\noindent
+where we wish to modify $\gamma$ and $c_i$ so that the power is maximized while still satisfying the level constraint. We claim that the optimal combination is one where (as in the Lemma) we set $c_i = 0$ for $i$ such that $\int \phi(x)p_{\theta_i}(x)d\mu(x) < \alpha$. Suppose instead that for these $i$ we kept $c_i > 0$. Then this would clearly decrease the power since $g(x)$ now needs to be greater than a summation of more terms in order to reject the null hypothesis. Thus it follows that the most powerful level $\alpha$ test is one that has $c_i=0$ for the $p_{\theta_i}$ that are relatively easier to differentiate from $g$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 6
+\noindent
+(6) Firstly, let us define $N(a) = \sum_{i=1}^n \ind\{X_i=a\}$ (i.e. the number of data points that equal $a$), so that $\hat{p}(a) = N(a) / n$. Now, since this is a testing of two simple hypothesis, we know the optimal test simply considers the likelihood ratio, so that:
+$$\phi(X) = \ind \biggl\{ \frac{q(X)}{p(X)} > T \biggr\}$$
+
+\noindent
+Consequently, we find through some simple algebra that:
+$$ \biggl\{ \frac{q(X)}{p(X)} > T \biggr\}
+=  \biggl\{ \prod_{i=1}^n \frac{q(x_i)}{p(x_i)} > T \biggr\}
+=  \biggl\{ \prod_{a=1}^K \frac{q(a)^{N(a)}}{p(a)^{N(a)}} > T \biggr\}
+=  \biggl\{ \prod_{a=1}^K \frac{q(a)^{\hat{p}(a)}}{p(a)^{\hat{p}(a)}} > T^{\frac{1}{n}} \biggr\}$$
+$$= \biggl\{ \log \prod_{a=1}^K \frac{q(a)^{\hat{p}(a)}}{p(a)^{\hat{p}(a)}} > \log T^{\frac{1}{n}} \biggr\}
+= \biggl\{ \sum_{a=1}^K \log \frac{q(a)^{\hat{p}(a)}}{p(a)^{\hat{p}(a)}} > \log T^{\frac{1}{n}} \biggr\}
+= \biggl\{ \sum_{a=1}^K \hat{p}(a) \log \frac{q(a)}{p(a)} > \log T^{\frac{1}{n}} \biggr\}$$
+$$= \biggl\{ \sum_{a=1}^K  \hat{p}(a) \biggl( \log \frac{\hat{p}(a)}{p(a)}- \log \frac{\hat{p}(a)}{q(a)}\biggr) > \log T^{\frac{1}{n}} \biggr\}$$
+$$= \biggl\{ \sum_{a=1}^K  \hat{p}(a) \log \frac{\hat{p}(a)}{p(a)}- \sum_{a=1}^K  \hat{p}(a)  \log \frac{\hat{p}(a)}{q(a)} > \log T^{\frac{1}{n}} \biggr\}$$
+$$= \{ KL(\hat{p},p) - KL(\hat{p},q) > \log T^{\frac{1}{n}} = T' \} \hspace{5 pt} \square$$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 7
+\pagebreak
+\noindent
+(7) Since we wish to maximize the average power, to find the optimal test we must solve the following constrained optimization:
+$$\max_\phi \int_{-\infty}^{\infty} \ex_\xi (\phi) d\Lambda(\mu)
+= \max_\phi \int_{-\infty}^{\infty} \int \phi(x) p_\xi(x) d\mu(x) d\Lambda(\mu)$$
+$$s.t. \int \phi(x) p_0(x) d\mu(x) \leq \alpha$$
+
+\noindent
+This is then equivalent to a maximization under the Lagrangian framework:
+$$\max_\phi \int_{-\infty}^{\infty} \int \phi(x) p_\xi(x) d\mu(x) d\Lambda(\mu)-\lambda \biggl(\int \phi(x) p_0(x) d\mu(x) - \alpha \biggr)$$
+$$\max_\phi \int \phi(x) \biggl( \int p_\xi(x) d\Lambda(\mu)-\lambda p_0(x) \biggr) d\mu + \lambda\alpha$$
+
+\noindent
+which yields the following solution:
+$$\phi(x) = \ind\biggl\{ \int p_\xi(x)d\Lambda(\mu) > \lambda p_0(x) \biggr\}
+=  \ind\biggl\{ \int \frac{p_\xi(x)}{p_0(x)} d\Lambda(\mu) > \lambda \biggr\}$$
+$$= \ind\biggl\{ \int_{\xi<0} \frac{p_\xi(x)}{p_0(x)} d\Lambda(\mu) + \int_{\xi>0}  \frac{p_\xi(x)}{p_0(x)} d\Lambda(\mu) > \lambda \biggr\}$$
+$$= \ind\biggl\{ \int_{\xi<0} \exp\biggl[ \frac{\sum X_i \xi}{\sigma^2}-\frac{\xi^2}{2\sigma^2} \biggr] d\Lambda(\mu) + \int_{\xi>0}  \exp\biggl[ \frac{\sum X_i \xi}{\sigma^2}-\frac{\xi^2}{2\sigma^2} \biggr] d\Lambda(\mu) > \lambda \biggr\}$$
+$$= \ind\biggl\{ \int_{\xi<0} \exp( \sum X_i \xi)^{1/\sigma^2}\cdot K(\xi^2) d\Lambda(\mu) + \int_{\xi>0}  \exp( \sum X_i \xi)^{1/\sigma^2}\cdot K(\xi^2) d\Lambda(\mu) > \lambda \biggr\}$$
+
+\noindent
+Now we note that if $\phi(x) = 1$, there are two possibilities. In the first, the right integral is very large (i.e. $\exp(\sum X_i \xi)$ is large for $\xi > 0$ but small for $\xi < 0$) so that $\sum X_i > T$ . In the second scenario,  the left integral is very large  (i.e. $\exp(\sum X_i \xi)$ is large for $\xi <0$ but small for $\xi > 0$) so that $\sum X_i < -T$. Hence, it is clear that in both scenarios we find $|\sum X_i| > T$. $\square$\\
+
+\noindent
+As a simple counterexample for non symmetric $\lambda$, consider $\Lambda = \delta_1$. Then the alternative hypothesis reduces to $H_a: \xi = 1$. Now the likelihood ratio is:
+$$\frac{p_1(X)}{p_0(X)}
+= \frac{\exp[-\frac{1}{2\sigma^2}\sum_{i=1}^n(X_i-1)^2]}{\exp[-\frac{1}{2\sigma^2}\sum_{i=1}^nX_i^2]}
+= \exp\biggl[\frac{\sum_{i=1}^nX_i}{\sigma^2}-\frac{1}{2\sigma^2}\biggr]$$
+Hence in this case, the most powerful level $\alpha$ test is of the form:
+$$\phi(X) = \ind\biggl\{ \frac{p_1(X)}{p_0(X)} > K\biggr\}
+= \ind\biggl\{  \exp \biggl[\frac{\sum_{i=1}^nX_i}{\sigma^2}-\frac{1}{2\sigma^2} \biggr] > K \biggr\}
+= \ind \biggl\{ \sum_{i=1}^nX_i > \sigma^2 \log K + \frac{1}{2} \biggr\}$$
+so that we reject for large values of $\sum_{i=1}^n X_i$ rather than $|\sum_{i=1}^n X_i|$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 8
+\pagebreak
+\noindent
+(8) From the Lemma from class, we know that $c_i \neq 0$ only for $\theta \in \Theta_0$ closest to $\theta = 5$, since these are the hardest to differentiate. Thus, we know that the most powerful test is equivalent to testing $H_0: N=5$. Now let us consider a simple alternative $H_1: N = n_0$ with $n_0 > 5$. We first observe the following:
+$$F_{X_{(n)}}(x) = F(x)^n \Rightarrow f_{X_{(n)}}(x) = n F(x)^{n-1}$$
+Then, since we are considering a simple hypothesis we find the optimal test rejects for large values of the likelihood ratio so that:
+$$\phi(X) = \ind \biggl\{ \frac{f_{X_{(n_0)}}(X)}{f_{X_{(5)}}(X)} > K \biggr\}
+= \ind \biggl\{ \frac{n_0 F(X)^{n_0-1} f(X) }{ 5F(X)^4 f(X)} > K \biggr\}
+= \ind \biggl\{ F(X)^{n_0-5} > \frac{5K}{n_0} \biggr\}$$
+$$= \ind \biggl\{ F(X) >  \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr\}
+= \ind \biggl\{ X > F^{-1} \biggl( \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr) \biggr\}$$
+We can then solve for $K$ by using the level constraint:
+$$\alpha = \ex_5 \ind \biggl\{ X > F^{-1} \biggl( \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr)\biggr\}
+= \prob \biggl\{ X_{(5)} > F^{-1} \biggl( \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr)\biggr\}
+= 1 - F \biggl(F^{-1} \biggl( \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr)\biggr)^5$$
+$$= 1- \biggl(\frac{5K}{n_0}\biggr)^{\frac{5}{n_0-5}}$$
+$$\Rightarrow \biggl(\frac{5K}{n_0}\biggr)^{\frac{1}{n_0-5}} = (1-\alpha)^{\frac{1}{5}}
+\Rightarrow K = \frac{n_0}{5} (1-\alpha)^{\frac{n_0-5}{5}}$$
+Thus our most powerful level $\alpha$ test reduces to:
+$$\phi(X) = \ind \biggl\{ X > F^{-1} \biggl( \biggl[\frac{5K}{n_0}\biggr]^{\frac{1}{n_0-5}} \biggr) \biggr\}
+= \ind\{X > F^{-1}( [1-\alpha]^{\frac{1}{5}})\}$$
+Since the test does not depend on the value of $n_0$ this is also the UMP test. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 9
+\pagebreak
+\noindent
+(9) Let us first define $P_-(X) = P(X | X \leq x_0)$ and $P_+(X) = P(X | X > x_0)$. Then it follows that:
+$$P(X) = P(X | X \leq x_0)\cdot P(X \leq x_0) + P(X | X > x_0)\cdot P(X > x_0) = p P_+ + p P_-$$
+
+\noindent
+Now suppose that we partition our data set $x_1, \dots , x_n$ so that:
+$$x_{1_i},\dots,x_{i_m} \leq x_0 < x_{j_1},\dots,x_{j_{n-m}}$$
+
+\noindent
+then it follows that if the distributions $P_-$ and $P_+$ have densities $p_-$ and $p_+$, the joint density of $X_1,\dots,X_n$ is:
+$$\prod_{k=1}^m P(x_{ik}, x_{ik} \leq x_0) \prod_{l=1}^{n-m}  P(x_{jl}, x_{jl} > x_0)$$
+$$= \prod_{k=1}^m P(x_{ik}| x_{ik} \leq x_0)P(x_{ik} \leq x_0) \prod_{l=1}^{n-m}  P(x_{jl}| x_{jl} > x_0)P(x_{jl} > x_0)$$
+$$= \prod_{k=1}^m p p_- \prod_{l=1}^{n-m}  q p_+
+= (p p_-)^m (qp_+)^{n-m}$$
+
+\noindent
+Now let us consider the simple alternative $H_1: p = p_1$ with $p_1 > p_0$. Once again, from the lemma in class, we expect the least favorable distribution to be $\Lambda = \delta_{p_0}$ since this is the point in the null hypothesis closest to the alternative. Under this framework, the test rejects for large values of the likelihood ratio. Using the fact that $p_-$ and $p_+$ do not depend on the value of $p$, it follows that:
+$$\phi_\Lambda(X) = \ind \biggl\{ \frac{f_{p_1}(X)}{f_{p_0}(X)} > K\biggr\} + \gamma\ind \biggl\{ \frac{f_{p_1}(X)}{f_{p_0}(X)} = K\biggr\}$$
+$$= \ind \biggl\{  \biggl(\frac{p_1}{p_0} \biggl)^m \biggl( \frac{q_1}{q_0} \bigg)^{n-m} > K \biggr\}
++ \gamma \ind \biggl\{  \biggl(\frac{p_1}{p_0} \biggl)^m \biggl( \frac{q_1}{q_0} \bigg)^{n-m} = K \biggr\}$$
+$$= \ind \{ m > K' \} + \gamma \ind\{ m = K' \}$$
+where we determine $\gamma$ by using the level constraint:
+$$\alpha = \ex_{p_0} \phi_\Lambda(X) = \prob \{m>K'\} + \gamma \prob\{ m = K'\}$$
+
+\noindent
+Now, the distribution of $m$ (= the number of observed defective light bulbs) is the binomial distribution $b(p,n)$, which does not depend on $P_+$ and $P_-$. Consequently, the power function of the test depends only on $p$, and is an increasing function of $p$, so that under $H_0$, it takes on its maximum for $p=p_0$. This proves that $\Lambda$ is the least favorable distribution, and hence that $\phi_\Lambda$ is the most powerful level $\alpha$ test. Since the test is independent of $p_1$, it follows that the test is UMP. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}
