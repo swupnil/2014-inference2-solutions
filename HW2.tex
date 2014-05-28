@@ -1,0 +1,166 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai (Time: 3 Hours)}
+\fancyhead[L]{Stat G6107 HW 2}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+
+\noindent
+(1) $\prob(M_n \leq a) = \prob(\max(X_1,\dots,X_n) \leq a-\log n /\lambda) = \prod\limits_{i=1}^n \prob(X_i\leq a+\log n/\lambda)$\\
+\indent\indent $= (1-e^{-\lambda(a+\log n / \lambda)})^n = (1-e^{-\lambda a}/n)^n.$\\ \\
+Then, $\lim\limits_{n\to\infty} \prob(M_n \leq a) = e^{-e^{-\lambda a}}.$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(2)\\
+(a) $\prob(T_n > r) = \prob(X_i \neq X_j \forall i<j\leq r) = \frac{(n-1)\cdots (n-r+1)}{n^{r-1}}
+= \prod_{i=1}^{r-1} (1-\frac{i}{n})$.\\ \\
+(b) $\lim\limits_{n\to\infty} \log\prob(T_n > r\sqrt{n})=\lim\limits_{n\to\infty}\log\{\prod_{i=1}^{r\sqrt{n}-1} (1-\frac{i}{n})\} 
+= \lim\limits_{n\to\infty}\sum_{i=1}^{r\sqrt{n}-1} \log (1-\frac{i}{n})
+\leq \lim\limits_{n\to\infty}\sum_{i=1}^{r\sqrt{n}-1} (-\frac{i}{n})$\\
+\indent$= \lim\limits_{n\to\infty} (-\frac{1}{n}) \sum_{i=1}^{r\sqrt{n}-1} i
+= \lim\limits_{n\to\infty} (-\frac{1}{n}) \frac{(r\sqrt{n}-1)r\sqrt{n}}{2} = -\frac{r^2}{2}.$\\
+
+\noindent
+Similarly, $\lim\limits_{n\to\infty}\sum_{i=1}^{r\sqrt{n}-1} \log (1-\frac{i}{n}) 
+\geq \lim\limits_{n\to\infty}\sum_{i=1}^{r\sqrt{n}-1} (-\frac{i}{n}-\frac{i^2}{n^2})
+=  -\frac{r^2}{2} - \lim\limits_{n\to\infty} \frac{1}{n^2} \sum_{i=1}^{r\sqrt{n}-1} i^2$\\
+\indent $= -\frac{r^2}{2} - \lim\limits_{n\to\infty} \frac{1}{n^2} \frac{(r\sqrt{n}-1)(r\sqrt{n})(2r\sqrt{n}-2+1)}{6}
+= -\frac{r^2}{2}-\lim\limits_{n\to\infty} \mathcal{O}(\frac{1}{\sqrt{n}}) = -\frac{r^2}{2}.$\\
+
+\noindent
+Hence, $\lim\limits_{n\to\infty} \log\prob(T_n > r\sqrt{n}) = -\frac{r^2}{2}$, so $\lim\limits_{n\to\infty}\prob(T_n>r\sqrt{n}) = e^{-\frac{r^2}{2}}.$\\
+Thus, $\lim\limits_{n\to\infty} \prob(T_n/\sqrt{n}\leq r) = 1-e^{-r^2/2}.$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(3) We know $X_n \overset{d}\to X$ implies $\Phi_{X_n}(t) \to \Phi_{X}(t)$ for all $t\in\mathbb{R}^n$.\\
+Then, $\ex e^{i<t,X_>} \to \ex e^{i<t,X>}$ for all $t\in\mathbb{R}^n$.\\
+Note that if we take any $c\in\mathbb{R}$, then $\ex e^{ic<t,X_n>} = \ex e^{i<ct,X_n>} \to \ex e^{i<ct,X>} =\ex e^{ic<t,X>}$.\\
+Thus, this shows that $\Phi_{<t,X_n>}(c) \overset\to{d} \Phi_{<t,X>}(c)$ for all $c\in\mathbb{R},t\in\mathbb{R}^n$.\\
+Hence, by Levy's Continuity Theorem, it follows that for all $t \in \mathbb{R}^n, <t,X_n>\overset{d}\to<t,X>.$ $\surd$\\
+
+\noindent
+Alternatively, if $<t,X_n>\overset{d}\to<t,X>$ for all $t\in\mathbb{R}^n$, then $\ex f(<t,X>) \to \ex f(<t,X_n>)$ for all bounded continuous functions $f$.\\
+Consider $f = \ex e^{ix}$.
+Then, $\ex e^{i<t,X_n>} \to \ex e^{i<t,X>}$ for all $t\in\mathbb{R}^n$.\\
+Hence, by Levy's Continuity Theorem, $X_n \overset{d}\to X$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(4)\\
+(i) $\mathcal{L} = \prod_{i=1}^n \lambda e^{-\lambda(x-a)}\ind(X_i \geq a)
+= \lambda^n e^{-\lambda(\sum X_i -an)}\ind(\min X_i \geq a).$\\
+Then, $\log \mathcal{L} = \log(\lambda^n) - \lambda(\sum_{i=1}^n X_i -an)+\log(\ind(\min X_i \geq a)).$\\
+
+\noindent
+Now, $\frac{\partial}{\partial\lambda} \log\mathcal{L} =  \frac{n\lambda^{n-1}}{\lambda^n}-(\sum_{i=1}^nX_i -an) = 0 \Rightarrow \hat\lambda_n = \frac{n}{\sum X_i - an}$. $\surd$\\
+
+\noindent
+As for $\hat a$, note that $-(\sum_{i=1}^n X_i -an)$ is a strictly increasing function of $a$. Furthermore, $\ind(\min_i X_i \geq a)=1$ as long as $a \leq \min_i X_i$. Hence, in order to increase $a$ as much as possible while subject to the constraint that $a \leq \min X_i$, the result is $\hat a = \min_i X_i$. $\surd$\\
+
+\pagebreak
+\noindent
+(ii)  Take any $\varepsilon > 0$.\\
+Then $\prob(|\min_i X_i - a| > \varepsilon) = \prob(\min_i X_i -a > \varepsilon) = \prob(\min_i X_i > a+\varepsilon) = \prod_{i=1}^n \prob(X_i > a+\varepsilon)$\\
+\indent $ = \prob(X_1 > a+\varepsilon)^n = [e^{-\lambda(a+\varepsilon-a)}]^n = e^{-\lambda\varepsilon n}$.\\
+
+\noindent
+Hence, $\lim\limits_{n\to\infty} \prob(|\min_i X_i - a| > \varepsilon) = \lim\limits_{n\to\infty} e^{-\lambda\varepsilon n} = 0$. Thus, $\hat a \overset{p}\to a$. $\square$\\
+
+\noindent
+Additionally, from WLLN, we know that $\frac{\sum X_i}{n} \overset{p}\to \ex X = \frac{1}{\lambda}+a$.\\
+Then, from the Continuous Mapping Theorem, $\frac{\sum X_i}{n}-\hat a \overset{p}\to \frac{1}{\lambda} + a -a = \frac{1}{\lambda}.$\\
+Hence, once again from the Continuous Mapping Theorem:\\
+\indent $\hat \lambda = (\frac{\sum X_i}{n}-\hat a)^{-1} \overset{p}\to \lambda$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(5) Consider the counter clockwise contour $C_R$ consisting of the line segment from $-R$ to $R$ and $\Gamma_R$, the semicircular arc of radius $R$ with $0 \leq \theta \leq\pi$.\\
+Then, $\int_{-\infty}^\infty \frac{e^{itx}}{\pi(x^2+1)} dx = \int_{C_R} \frac{e^{itz}}{\pi(z^2+1)}dz=\int_{-R}^R \frac{e^{itz}}{\pi(z^2+1)}dz+\int_{\Gamma_R}\frac{e^{itz}}{\pi(z^2+1)}.$\\
+
+\noindent
+Now $\int_{-R}^R \frac{e^{itz}}{\pi(z^2+1)}dz = 2\pi i \underset{z=i} Res \frac{e^{itz}}{\pi(z^2+1)} = e^{-|t|}$.\\
+Additionally, $\int_{\Gamma_R}\frac{e^{itz}}{\pi(z^2+1)} dz \leq \int_{\Gamma_R} |\frac{e^{itz}}{\pi(z^2+1)}| |dz|
+\leq \int_{\Gamma_R} \frac{1}{R^2-1} |dz| = \frac{\pi R}{R^2-1} \to 0$ as $R\to\infty$. \\
+
+\noindent
+Thus,  $\Phi_X(t) = e^{-|t|}$. \\
+Hence, $\Phi_{\sum X_i / n}(t) = \Phi_{\sum X_i} (t/n) = \prod\limits_{i=1}^n \Phi_{X_i}(t/n) = \prod_{i=1}^n e^{-|t|/n} = (e^{-|t|/n})^n = e^{-|t|} = \Phi_X(t)$. $\square$\\
+
+\noindent
+The WLLN does not hold because in this case $X$ does not have finite mean or variance.
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(6) Since $F_X(t)$ is continuous, then every $t\in\mathbb{R}$ is a continuity point. Now since $X_n \overset{d}\to X$, by definition of convergence in distribution, it follows that $F_n(t) \to F(t)$ for all $t\in\mathbb{R}$.\\
+Hence, for any $x\in\mathbb{R}$, we have:\\
+\indent $|\prob(X_n \leq x)-\prob(X \leq x)| = |F_{X_n}(x)-F_X(x)| \to 0$.\\
+
+\noindent
+Now, we know $\lim\limits_{x\to\infty} F_{X_n}(x) = \lim\limits_{x\to\infty}F_X(x) = 1$ and 
+$\lim\limits_{x\to-\infty} F_{X_n} (x) = \lim\limits_{x\to-\infty} F_X(x) = 0$.\\
+Hence, if $\lim\limits_{n\to\infty}\sup\limits_x |F_{X_n}(x)-F_X(x)| = \delta > 0$, since $F_{X_n}$ and $F_X$ are bounded, it must be the case that there exists at least one $x^*$ such that $\lim\limits_{n\to\infty} |F_{X_n}(x^*) - F_X(x^*)| = \lim\limits_{n\to\infty}\sup\limits_x |F_{X_n}(x)-F_X(x)| = \delta.$\\
+However, we just showed above that $|F_{X_n}(x)-F_X(x)| \to 0$ for all $x\in\mathbb{R}$, a contradiction.\\ \\
+Thus, $\sup\limits_x |\prob(X_n \leq x)-\prob(X \leq x)| = \sup\limits_x |F_{X_n}(x)-F_X(x)| \to 0$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+\pagebreak
+
+\noindent
+(7) $\prob(X_n+Y_n\leq x+c) = \prob(X_n+Y_n \leq x+c, |Y_n-c| < \varepsilon) + \prob(X_n+Y_n \leq x+c,|Y_n-c|\geq \varepsilon)$\\ \\
+$\prob(X_n+Y_n\leq a) \leq \prob(X_n+Y_n \leq a, |Y_n-c| < \varepsilon) + \prob(|Y_n-c|\geq \varepsilon)$\\
+\indent $\leq \prob(X_n+c \leq a+\varepsilon, |Y_n-c| < \varepsilon) + \prob(|Y_n-c|\geq \varepsilon)$\\
+\indent $\leq \prob(X_n \leq a-c+\varepsilon)+ \prob(|Y_n-c|\geq \varepsilon).$\\ \\
+$\prob(X_n+Y_n\leq a) \geq \prob(X_n+Y_n \leq a, |Y_n-c| < \varepsilon)$\\
+\indent $\geq \prob(X_n+c \leq a-\varepsilon, |Y_n-c| < \varepsilon)$\\
+\indent $= \prob(X_n \leq a-c-\varepsilon)-\prob(X_n \leq a-c-\varepsilon, |Y_n-c|\geq \varepsilon)$\\
+\indent $\geq \prob(X_n \leq a-c-\varepsilon)-\prob(|Y_n-c|\geq \varepsilon).$\\
+
+\noindent
+Hence, $\prob(X\leq a-c-\varepsilon) = \lim\limits_{n\to\infty} [\prob(X_n\leq a-c-\varepsilon)-\prob(|Y_n-c|\geq \varepsilon)] \leq \lim\limits_{n\to\infty} \prob(X_n+Y_n\leq a).$\\
+
+\noindent
+Additionally, $\prob(X\leq a-c+\varepsilon) = \lim\limits_{n\to\infty} [\prob(X_n\leq a-c+\varepsilon)+\prob(|Y_n-c|\geq \varepsilon)] \geq \lim\limits_{n\to\infty} \prob(X_n+Y_n\leq a).$\\
+
+\noindent
+Thus, for all $\varepsilon>0$, we have that $\prob(X\leq a-c+\varepsilon) \geq \lim\limits_{n\to\infty} \prob(X_n+Y_n\leq a) \leq \prob(X\leq a-c-\varepsilon).$\\
+
+\noindent
+Therefore, $ \lim\limits_{n\to\infty} \prob(X_n+Y_n\leq a)=\prob(X \leq a-c) = \prob(X+c \leq a)$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+
+
+\end{document}

@@ -1,0 +1,158 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6107 HW 4}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+% PROBLEM 1
+
+\noindent 
+(1) Take any $x, v \in$ dom$(f)$ and any $s,t \in \mathbb{R}$ such that $b = \frac{x-v}{t-s}, a = x-tv \in$ dom$(f)$.\\
+Then, $g(t)$ is convex $\Leftrightarrow g(\theta t+(1-\theta)s) \leq \theta g(t) + (1-\theta) g(s)\\
+\indent\Leftrightarrow f(a+[\theta t+(1-\theta)s]b) \leq \theta f(a+tb) + (1-\theta) f(a+sb)\\
+\indent\Leftrightarrow f(\theta a +(1-\theta)a + \theta tb +(1-\theta)sb) \leq \theta f(a+tb) + (1-\theta) f(a+sb)\\
+\indent\Leftrightarrow f(\theta (a+tb) + (1-\theta) (a+sb)) \leq \theta f(a+tb) + (1-\theta) f(a+sb)\\
+\indent\Leftrightarrow f(\theta x + (1-\theta) v) \leq \theta f(x) + (1-\theta) f(v)\\
+\indent\Leftrightarrow f(x)$ is convex. $\square$\\
+
+\noindent
+Let $A$ denotes the set of symmetric positive semidefinite matrices. Then, using the result, it suffices to show that $g(t) =$ log det$(t) = $log det$(X+tV)$ is concave for every $X \in A, V$ and $t\in\mathbb{R}$ such that $X+tV \in A$.\\
+
+\noindent
+Now, $g(t) =$ log det$(X+tV) =$log det$X$ + log det$(I+tX^{-1/2}VX^{-1/2}) = $log det$X + \sum_{i=1}^n\log(1+t\lambda_i)$, where $\lambda_i$ are the eigenvalues of $X^{-1/2}VX^{-1/2}$. Hence, clearly $g(t)$ is a concave function of $t$, showing that $f(X)$ is concave. $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(2) Suppose there exists an $\varepsilon^*>0$ such that no $M$ exists satisfying $\prob\{|X_n|>M\} \leq \varepsilon^*$ for all $n\in\mathbb{N}$. Then for any arbitrary $M$, $\exists n$ such that $\prob\{|X_n|>M\} > \varepsilon^*$, which is a contradiction since $\ex |X_n| \leq \ex (|X_n|^k)^{1/k} < C^{1/k} < \infty$ for all n. Thus, it follows that $X_n = \mathcal{O}_p(1)$. $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(3) Take any $\varepsilon > 0$. Since $Y_n = \mathcal{O}_p(1)$, there exists some $M$ such that for all $n$, $\prob(|Y_n|>M) \leq \frac{\varepsilon}{2}$. Furthermore, since $X_n \overset{p}\to 0$, then for any $\delta>0$ there exists some $n^*$ such that for all $n>n^*$, $\prob(|X_n|>\delta)\leq \frac{\varepsilon}{2}$. Hence for all $n>n^*$: 
+$$\prob(|X_nY_n|>\delta) =\prob(|X_n|>\delta,|Y_n|>1)+\prob(|X_n|\leq\delta,|Y_n|>\delta/|X_n|)$$
+$$ \leq \prob(|X_n|>\delta)+\prob(|Y_n|>M) \leq \frac{\varepsilon}{2} + \frac{\varepsilon}{2} \leq \varepsilon. \hspace{10 pt} \square$$
+Additionally, for all $n>n^*$:
+$$\prob(|X_n+Y_n|>M) \leq \prob(|Y_n| > M, |X_n|>0)+\prob(|Y_n|<M, |X_n| > M-|Y_n|)$$
+$$ \leq \prob(|Y_n|>M) + \prob(|X_n|>\delta) \leq \frac{\varepsilon}{2} + \frac{\varepsilon}{2} < \varepsilon. \hspace{10 pt} \square$$
+Using statements stated in this proof, it is clear now that $X_n/Y_n \overset{p}\to 0$.
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(4) Since $\ex(|X_n|^{\alpha}) = \bigo(n^\beta)$, it follows that $\exists C \exists M$ such that for all $n>M$, $\ex(|X_n|^{\alpha}) \leq C n^{\beta}$.\\
+Then $\ex |X_nn^{-\beta/\alpha}|^\alpha \leq C$ for all $n>M$.
+Now, clearly for $m \leq M$ we can find $C_m$ such that $\ex |X_mm^{-\beta/\alpha}|^\alpha \leq C_m$.\\
+Hence, if we take $C^* = \max(C_1,\dots,C_M,C)$, then we have that $\ex |X_nn^{-\beta/\alpha}|^\alpha \leq C^*$ for all $n$.\\
+
+\noindent
+Consequently, using the results from Problem 2, it follows that $X_nn^{-\beta/\alpha} = \bigo(1)$.
+This indicates that $X_nn^{-\beta/\alpha} = R_n$ where for all $\varepsilon>0$, there exists a $K$ such that for all $n>K$, $\prob(|R_n|>K)\leq \varepsilon$.\\
+Then, $X_n = R_n \cdot n^{\beta/\alpha}$ and the property above still holds for $R_n$, showing that $X_n = \bigo(n^{\beta/\alpha})$. $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\pagebreak
+\noindent
+(5) Since $X_n = \bigo_p(1)$, for every $\varepsilon > 0$, there exists an $M$ such that for all $n \in \mathbb{N}$, $\prob(|X_n|>M) \leq \varepsilon$. Now note that since $K=\{|X_n|\leq M\}$ is a compact set, it must be the case that $f$ achieves a maximum $M^*$ on $A$. Furthermore, $\{f(X_n) > M^*\} \subset f(\{|X_n|>M\}) =f(K^C)$. Thus, $\prob(|f(X_n)|>M^*) \leq \prob(f(X_n)>M^*) \leq \prob(|X_n|>M) \leq \varepsilon$. Hence, $f(X_n) = \bigo_p(1)$. $\square$\\
+
+\noindent
+We know that if $X_n = o_p(1)$, then $X_n \overset{p}\to 0$. Then by the Continuous Mapping Theorem, $f(X_n) \overset{p}\to f(0) = 0$, showing that $f(X_n) = o_p(1)$. $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(6) Since $X$ is an arbitrary random variable, we know that for every $\varepsilon > 0$, there exist an $M$ such that $\prob(|X|>M) \leq \varepsilon/2$. Additionally, from Homework 2 we know that $X_n \overset{d}\to X$ implies that $\prob(X_n \leq a) \to \prob(X \leq a)$ uniformly. Thus, $\prob(|X_n|>M)$ converges uniformly to $\prob(|X|>M)$. Hence, for $\varepsilon$ defined above, there exists an $n^*$ such that for all $n>n^*$, $|\prob(|X_n|>M)-\prob(|X|>M)| \leq \varepsilon/2$. Thus, for all $n>n^*$, it follows that:\\
+\indent $\prob(|X_n|>M) \leq |\prob(|X_n|>M)-\prob(|X|>M)|+\prob(|X|>M) \leq \varepsilon/2 + \varepsilon/2 = \varepsilon$.
+$\square$\\
+
+\noindent
+Since $Z_n = o_p(X_n)$, it follows that $Z_n = R_n X_n$ with $R_n \overset{p}\to 0$, implying that $R_n = o_p(1)$. We also just proved that $X_n = \mathcal{O}_p(1)$. Hence, from Problem 3, it follows that $Z_n = R_n X_n = o_p(1)$. $\square$\\
+
+\noindent
+In the proof of the Delta method, we said that $||r_n(\phi(T_n)-\phi(\theta))-A(\theta)r_n(T_n-\theta)|| = r_no_p(||T_n-\theta||) = o_p(r_n||T_n-\theta||) = o_p(1)$ since $||T_n-\theta|| = \bigo_p(1)$.
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(7) It is apparent that that $\hat{p}(1-\hat{p}) = g(\bar{S}_n)$, where:
+$$ g(u) = u-u^2 $$
+
+\noindent
+Now, clearly $g$ is smooth and $\frac{d}{du}g = 1-2u$. Then, if we let $p = \ex S_1$, from the CLT we have that:
+$$\sqrt{n}(\bar{S}_n-p) \overset{d}\to N(0,p-p^2)$$
+Thus, from the delta method: 
+$$\sqrt{n}(\hat{p}_n(1-\hat{p}_n)-p(1-p)) = \sqrt{n} [g(\bar{S}_n)-g(p)] \overset{d}\to N(0,(1-2p)^2(p-p^2)). \square$$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\pagebreak
+\noindent
+(8) Consider $U_i = (X_i,Y_i,X_i^2,Y_i^2,X_iY_i)^T$. Then it follows that $\hat{\rho}_n = g(\bar{U}_n)$, where:
+$$g((u_1,u_2,u_3,u_4,u_5)^T) = \frac{u_5-u_1u_2}{(u_3-u_1^2)^{1/2}(u_4-u_2^2)^{1/2}}$$
+
+\noindent
+Now, clearly $g$ is smooth and $\grad g$ is simple to compute. Then if we let $\mu = \ex U_1$ and assume that $X_i$ and $Y_i$ have finite fourth moments, then from the CLT, we have that:
+$$\sqrt{n}(\bar{U}_n-\mu) \overset{d}\to N(0,\Sigma),$$
+where $\Sigma$ is the covariance matrix of $U_1$. Thus, from the delta method: 
+$$\sqrt{n}(\hat{\rho}_n-\rho) = \sqrt{n} [g(\bar{U}_n)-g(\mu)] \overset{d}\to N(0,\grad g(\mu) \Sigma \grad g^T(\mu)). \square$$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\noindent
+(9) It is apparent that $|\bar{X}_n|^p = g(\bar{X}_n)$, where:
+$$ g(u) = |u|^p.$$
+However, we notice that $\frac{d}{du}g = \sigma(u)p|u|^{p-1}$, where $\sigma(u) = \ind\{u\geq 0\}-\ind\{u<0\}$. This leads to several issues. Firstly, $g'(0)$ is not defined for $p<2$ since $\lim\limits_{x\to0^+} g'(x) \neq \lim\limits_{x\to0^-}g'(x)$. Additionally, for $p>1,$ it is clear that $g'(0) =0$. Hence, we cannot use the delta method.\\
+
+\noindent
+However, we do know from the CLT that since $\theta = \ex \bar{X}_n$:
+$$ \sqrt{n}(\bar{X}_n-\theta) \overset{d}\to N(0,\sigma^2)$$
+where $\sigma^2 = \ex X^2-(\ex X)^2$ is the variance. Hence in the case case where $\theta = 0$:
+$$ \sqrt{n}\bar{X}_n \overset{d}\to N(0,\ex X^2).$$
+Thus, from the Continuous Mapping Theorem:
+$$ \sqrt{n^p} |\bar{X}_n|^p \overset{d}\to |Y|^p$$
+where $Y \sim N(0,\ex X^2)$ and $p \in (0,\infty)$.  $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\pagebreak
+\noindent
+(10) (a) The conditions for this statement to be proven are not enough. As a counterexample, take $\theta_n = \theta$ for all $n$ and $\phi(\theta) = \theta^3$. Then for any $\varepsilon>0$, regardless how large $n$ is,
+$$|\phi(\theta_n+h)-\theta(\theta_n)-\phi'(\theta)h| = |(\theta+h)^3-\theta^3-3\theta^2h|
+= |\theta^3+3\theta^2h+3\theta h^2+h^3-\theta^3-3\theta^2h|$$
+$$= |3\theta h+h^2| |h| \nleq \varepsilon |h|. \hspace{10 pt} \square$$
+
+\noindent
+(b) Assuming that the result of (a) holds, then for any $\varepsilon>0$ and $n$ large enough: $$|\phi(T_n)-\phi(\theta_n)-\phi'(\theta)(T_n-\theta_n)| \leq \varepsilon |T_n-\theta_n|.$$ Hence, $|\sqrt{n}(\phi(T_n)-\phi(\theta_n))-\phi'(\theta)\sqrt{n}(T_n-\theta_n)| \leq \varepsilon \sqrt{n} |T_n-\theta_n| \leq \varepsilon$ for $n$ large enough since $\sqrt{n}(T_n-\theta_n) \overset{d}\to T$. Thus, defining $R_n = \sqrt{n}(\phi(T_n)-\phi(\theta_n))-\phi'(\theta)\sqrt{n}(T_n-\theta_n)$, it is clear from above that $R_n \overset{p}\to 0$. Furthermore, since $\sqrt{n}(T_n-\theta_n) \overset{d}\to T$, from the Continuous Mapping Theorem it follows that $\phi'(\theta)\sqrt{n}(T_n-\theta_n) \overset{d}\to \phi'(\theta)T$. Thus, 
+$$\sqrt{n}(\phi(T_n)-\phi(\theta_n)) = \phi'(\theta)\sqrt{n}(T_n-\theta_n)+R_n \overset{d}\to \phi'(\theta)T. \hspace{10 pt} \square $$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}

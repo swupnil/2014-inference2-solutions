@@ -1,0 +1,257 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6108 HW 8}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+% PROBLEM 1
+% (We follow the proof on page 2-3 of Lecture 11)
+\noindent
+(1) Conditions (a)-(c) satisfy the conditions for the Uniform Weak Law of Large Numbers (here $U(x,\theta) = m_\theta(x)$ and $K(x) = \sup_\theta m_\theta(x)$), so that:
+$$\sup_{\theta\in\Theta} \biggl| \frac{1}{n} \sum_{i=1}^n m_\theta(x_i) - \ex m_\theta(x) \biggr| \overset{p}\to 0. \hspace{5 pt} \surd$$
+Now let $A$ and $B$ be the events defined as:
+$$A = \biggl\{ \sup_{\theta\in\Theta} | \frac{1}{n} \sum_{i=1}^n m_\theta(x_i) - \ex_{\theta_0} m_\theta(x) | < \varepsilon'/2 \biggr\}$$
+$$B = \biggl\{ \inf_{\theta:||\theta-\theta_0||>\varepsilon} \frac{1}{n} \sum_{i=1}^n m_\theta(x_i) \leq \frac{1}{n} \sum_{i=1}^n m_{\theta_0}(x_i) \biggr\}$$
+
+\noindent
+where $\varepsilon' = \inf_{\theta':||\theta'-\theta_0||_2\geq \varepsilon} \ex_{\theta_0} m_{\theta'}(x) - \ex_{\theta_0} m_{\theta_0}(x)$. Note that the Uniform WLLN implies that $\prob(A^C) \to 0$. At the same time, it follows that:
+$$\prob(||\hat{\theta}-\theta_0|| > \varepsilon) 
+\leq \prob \biggl( \exists \theta:||\theta-\theta_0||>\varepsilon, \frac{1}{n}\sum_{i=1}^n m_\theta(x_i) < \frac{1}{n}\sum_{i=1}^n m_\theta(x_i) \biggr)
+= P(B,A) + P(B,A^C)$$
+
+\noindent
+Now, under event A, it follows from condition (d) that:
+$$\frac{1}{n} \sum_{i=1}^n m_\theta(x_i) > \ex_{\theta_0} m_\theta(x_i) - \varepsilon'/2
+> \ex_{\theta_0} m_{\theta_0}(x)+\varepsilon'-\varepsilon'/2
+> \frac{1}{n} \sum_{i=1}^n m_{\theta_0}(x_i)-\varepsilon'/2+\varepsilon'-\varepsilon'/2$$
+$$= \frac{1}{n} \sum_{i=1}^n m_{\theta_0}(x_i)$$
+which holds for every $\theta$. Consequently, $\prob(A \cap B) = 0$, so that:
+$$\prob(||\hat{\theta}-\theta_0||>\varepsilon) < \prob(B,A) + \prob(B,A^C) = \prob(B,A^C) \leq \prob(A^C) \to 0. \hspace{5 pt} \square$$
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 2, Step 1
+% (We follow the proof of Problem 1 in HW 7)
+\pagebreak
+\noindent
+(2) Step 1. From Taylor's Theorem we have that there exists a $\widetilde\theta_n \in [\hat{\theta}_{ML},\theta_0]$ such that:
+$$0 = \frac{1}{n}\sum_{i=1}^n m'(X_i-\hat{\theta})
+= \frac{1}{n}\sum_{i=1}^n m'(X_i-\theta_0+\theta_0-\hat{\theta})
+= \frac{1}{n}\sum_{i=1}^n m'(X_i-\theta_0)+(\theta_0-\hat{\theta})m''(X_i-\widetilde\theta_n)$$
+$$\Rightarrow \hat{\theta}-\theta_0 = \frac{\frac{1}{n}\sum_{i=1}^n m'(X_i-\theta_0)}{\frac{1}{n} \sum_{i=1}^n m''(X_i-\widetilde\theta_n)}. \hspace{5 pt} \surd$$
+
+%PROBLEM 2, Step 2
+\noindent
+Step 2. Suppose that in addition to the conditions from Problem 1, we also have that there exists a function $K(x)$ with $\ex K(x) < \infty$ and $|m''(x,\theta)| < K(x)$ for every $x$ and $\theta$. This condition, along with conditions (a) and (b) from Problem 1 satisfy the hypothesis of the Uniform Weak Law of Large Numbers. Consequently, for any $\varepsilon>0$:
+$$\sup_{\theta\in\Theta} \biggl|\frac{1}{n} \sum_{i=1}^n m''_\theta(x_i) - \ex m''_\theta (x) \biggr| \overset{p}\to 0. \hspace{5 pt} \surd$$
+
+\noindent
+Additionally, we are given that $\hat{\theta}_{ML} \overset{p}\to \theta_0$. This, along with the fact that $\widetilde{\theta}_n \in [\hat{\theta}_{ML}, \theta_0]$, implies:
+$$\prob(||\widetilde{\theta}_n-\theta_0||_2 > \varepsilon)
+\leq \prob(||\hat{\theta}_{ML}-\theta_0||_2 > \varepsilon)
+\to 0. \hspace{5 pt} \surd$$
+
+%PROBLEM 2, Step 3
+\noindent
+Step 3. The results from the previous step, combined with the Weak Law of Large Numbers, hence imply:
+$$\frac{1}{n} \sum_{i=1}^n m''(X_i-\widetilde\theta_n) \overset{p}\to \ex m''(X-\theta_0)$$
+Additionally, from the Central Limit Theorem we have that:
+$$\sqrt{n} \biggl( \frac{1}{n}\sum_{i=1}^n m'(X_i-\theta_0) \biggr) \overset{d}\to N(0, \ex m'^2(X-\theta_0))$$
+
+%PROBLEM 2, Step 4
+\noindent
+Step 4. Thus, from Slutsky's Theorem it follows that:
+$$\sqrt{n}(\hat{\theta}-\theta_0) 
+= \frac{\sqrt{n} \frac{1}{n}\sum_{i=1}^n m'(X_i-\theta_0)}{\frac{1}{n} \sum_{i=1}^n m''(X_i-\widetilde\theta_n)}
+\overset{d}\to N \biggl(0, \frac{\ex m'^2(X-\theta_0)}{[\ex m''(X-\theta_0)]^2} \biggr).
+ \hspace{5 pt} \square$$
+ 
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 3, PART a
+\pagebreak
+\noindent 
+(3) a. Letting $Y = [Y_1 \cdots Y_n]^T$ it follows that $Y \sim N(X\beta, \sigma^2 I)$ so that:
+$$\hat{\beta}_{ML} = \arg\max_\beta \log \exp\{(Y-X\beta)^T(Y-X\beta)/2\sigma^2\}$$
+$$= \arg\max_\beta (Y-X\beta)^T(Y-X\beta) 
+= \arg\min_\beta |-2X^T(Y-X\beta)| 
+= \arg\min_\beta |X^TY - X^TX\beta |$$
+$$= (X^TX)^{-1}X^TY. \hspace{5 pt} \square$$
+
+%PROBLEM 3, PART b
+\noindent
+b. Conditioned on $X^TX$, the distribution of $\hat{\beta}_{ML}$ is easy to find:
+$$\ex [\hat{\beta}_{ML}|X^TX] = \ex [(X^TX)^{-1}X^TY|X^TX] = (X^TX)^{-1}X^T \ex Y = (X^TX)^{-1}X^T X\beta = \beta.$$
+$$Var [\hat{\beta}_{ML}|X^TX] = Var [(X^TX)^{-1}X^TY|X^TX] = (X^TX)^{-1}X^T Var(Y) X (X X^T)^{-1}$$
+$$= (X^TX)^{-1} Var(Y) = \sigma^2 (X^TX)^{-1}.$$
+
+\noindent
+Consequently, it follows that:
+$$\hat{\beta}_{ML} = (X^TX)^{-1}X^TY = (X^TX)^{-1}X^T \cdot N(X\beta,\sigma^2 I) = N(\beta, \sigma^2 (X^TX)^{-1})$$
+so that:
+$$\hat{\beta}_{ML}-\beta \sim N(0, \sigma^2 (X^TX)^{-1}). \hspace{5 pt} \square$$
+
+%PROBLEM 3, PART c
+\noindent
+c. From the Weak Law of Large Numbers we know that:
+$$\frac{1}{n}X^TX \overset{p}\to \sigma^2 I \hspace{5 pt}
+{\rm implying} \hspace{5 pt}  n (X^TX)^{-1} \overset{p}\to \sigma^{-2} I.$$
+
+\noindent
+Consequently, it follows that:
+$$\sqrt{n} (\hat{\beta}_{ML}-\beta) 
+= \sqrt{n}\cdot N(0,\sigma^2 (X^TX)^{-1}) 
+= N(0,\sigma^2 n (X^TX)^{-1})
+ \overset{d}\to N(0,I). \hspace{5 pt} \square$$
+ 
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 4, Step 1
+% (We follow the proof of Problem 2)
+\pagebreak
+\noindent
+(4) Step 1. Let $A$ denotes the Hessian matrix of $m$. Then from Taylor's Theorem we have that there exists a $t\in[0,1]$ and $\widetilde\beta_n =  \beta_0+t(\hat{\beta}-\beta_0)$ such that:
+$$0 = \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T \hat{\beta})
+= \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T\beta_0+x_i^T\beta_0-x_i^T\hat{\beta})$$
+$$= \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T\beta_0)+A^T(m(y_i-x_i^T\widetilde\beta_n)) (\beta_0-\hat{\beta}) $$
+$$\Rightarrow \hat{\beta}-\beta_0 = \biggl[ \frac{1}{n} \sum_{i=1}^n A^T(m(y_i-x_i^T\widetilde\beta_n)) \biggr]^{-1}
+\biggl[ \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T\beta_0) \biggr]. \hspace{5 pt} \surd$$
+
+%PROBLEM 4, Step 2
+\noindent
+Step 2. Suppose that $A_{jk}(m(y-x^T\beta))$ is continuous in $\beta_j,\beta_k$ for all $y,x$. Additionally, suppose that we restrict our minimization to $\beta \in B = B_1 \times \cdots \times B_p$, where $B_j$ are compact. Lastly, suppose there exists a function $K(x)$ with $\ex K(x) < \infty$ and $|A_{ij}(m(y-x^T\beta))| < K(x)$ for every $x\in\mathbb{R}^p$ and $\beta_j \in B_j,\beta_k\in B_k$. These conditions then satisfy the hypothesis of the Uniform Weak Law of Large Numbers. Consequently, for any $\varepsilon>0$ and every $j,k$:
+$$\sup_{\beta\in B} \biggl|\frac{1}{n} \sum_{i=1}^n A_{jk} (m(y_i-x_i^T\beta)) - \ex A_{jk}(m(y-x^T\beta)) \biggr| \overset{p}\to 0. \hspace{5 pt} \surd$$
+
+\noindent
+Additionally, we are given that $\hat{\beta} \overset{p}\to \beta_0$. This, along with the fact that $\widetilde{\beta}_n = \beta_0+t(\hat{\beta}-\beta_0)$ for $t \in [0,1]$, implies:
+$$\prob(||\widetilde{\beta}_n-\beta_0||_2 > \varepsilon)
+\leq \prob(||\hat{\beta}-\beta_0||_2 > \varepsilon)
+\to 0. \hspace{5 pt} \surd$$
+
+%PROBLEM 4, Step 3
+\noindent
+Step 3. The results from the previous step, combined with the Weak Law of Large Numbers, hence imply that for each $j,k$:
+$$\frac{1}{n} \sum_{i=1}^n A_{jk}(m(y_i-x_i^T\widetilde\beta_n)) \overset{p}\to \ex A_{jk}(m(y-x^T\beta_0)).$$
+
+\noindent
+Since we convergence element-wise, we readily then attain convergence of the entire matrix:
+$$\frac{1}{n} \sum_{i=1}^n A^T(m(y_i-x_i^T\widetilde\beta_n)) \overset{p}\to \ex A^T(m(y-x^T\beta_0)).$$
+
+\noindent
+Additionally, from the multivariate Central Limit Theorem we have that:
+$$\sqrt{n} \biggl( \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T \beta_0) \biggr) \overset{d}\to N(0, \ex \grad m(y-x^T\beta_0) \grad^T m(y-x^T\beta_0))$$
+
+%PROBLEM 4, Step 4
+\noindent
+Step 4. Thus, from Slutsky's Theorem it follows that:
+$$\sqrt{n}(\hat{\beta}-\beta_0) 
+= \sqrt{n} \biggl[ \frac{1}{n} \sum_{i=1}^n A^T(m(y_i-x_i^T\widetilde\beta_n)) \biggr]^{-1}
+\biggl[ \frac{1}{n}\sum_{i=1}^n \grad m(y_i-x_i^T\beta_0) \biggr]$$
+
+$$\overset{d}\to N\biggl(0, \biggl[ \ex A^T(m(y-x^T\beta)) \biggr]^{-1} 
+\biggl[ \ex \grad m (y-x^T\beta) \grad^T m(y-x^T\beta) \biggr] 
+\biggl[ [\ex A^T(m(y-x^T\beta))]^{-1} \biggr]^T \biggr).
+ \hspace{5 pt} \square$$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 5
+\pagebreak
+\noindent
+(5) Let $\Sigma(m,H)$ denote the asymptotic covariance matrix of $\sqrt{n}(\hat{\beta}-\beta)$ from the previous problem. Then it follows that for the multidimensional case:
+$$m_0 = \arg \inf_m \sup_H Tr(\Sigma(m,H))$$
+We claim that the following function is the saddle point:
+$$m_0(t) = \frac{1}{2}t^2 \ind_{\{|t|<k\}} + (k|t|-\frac{1}{2}k^2)\ind_{\{|t| \geq k\}}$$
+$$-\frac{\grad f_0(y)}{f_0(y)} = \grad m_0(y)$$
+
+%PROBLEM 5, Step 1
+\noindent
+Step 1. Proof that $Tr(\Sigma(m_0,f)) \leq Tr(\Sigma(m_0,f_0))$.\\
+Let $g_{ij}(t)$ denote the entries of the matrix  $\grad m_0(t) \grad^Tm_0(t)$. Then:
+$$\ex_f g_{ij}(t)
+= (1-\delta) \ex_\phi g_{ij}(t)+\delta \ex_h g_{ij}(t)
+\leq (1-\delta) \ex_\phi g_{ij}(t)+\delta \ex_h k^2$$
+
+\noindent
+Hence, equality is achieved (and $\ex_f g_{ij}(t)$ is maximized) if $h$ has no mass in the region $[-k,k]$. Note that this consequently maximizes $Tr(\ex_f \grad m_0(t) \grad^Tm_0(t))$. \\
+
+\noindent
+Similarly, if we let  $a_{ij}(t)$ denote the entries of the Hessian of $m_0(t)$, then:
+
+$$\ex_f a_{ij}(t)
+= (1-\delta) \ex_\phi a_{ij}(t)+\delta \ex_h a_{ij}(t)
+\geq (1-\delta) \ex_\phi a_{ij}(t)+\delta \ex_h 0$$
+
+\noindent
+Hence, equality is achieved (and $\ex_f b_{ij}(t)$ is minimized) if $h$ has no mass in the region $[-k,k]$. Note that this consequently minimizes $Tr(\ex_f A^T(m_0(t)) )$. \\
+
+\noindent
+Thus we have shown that this characterization of $f_0$ maximizes\\
+$Tr(\Sigma(m_0,f)) = [\ex_f A^T(m_0(t))]^{-1}] [\ex_f \grad m_0(t) \grad^T m_0(t)] ([\ex_f A^T(m_0(t))]^{-1})^T$
+$\surd$\\
+
+%PROBLEM 5, Step 2
+\noindent
+Step 2. Proof that $Tr(\Sigma(m,f_0)) \geq Tr(\Sigma(m_0,f_0))$.\\
+Using integration by parts we find:
+$$\ex_f A(m(y)) = \ex_f \grad m(y) 1^T  - \ex_{\grad f} \grad m(y) = 0 - \ex_{\grad f} \grad m(y)$$
+
+\noindent
+Consequently, using Cauchy-Schwarz:
+$$Tr( [\ex_f A^T(m(y))][\ex_f A^T(m(y))]^T) 
+\geq Tr( [\ex_f \grad m(y) \grad^T m(y)][\ex_{\grad f} \frac{1}{f(y)}\grad f(y)] )$$
+
+\noindent
+Thus, from the inequality above it follows that:
+$$Tr(\Sigma(m,f_0)) = Tr([\ex_f A^T(m(t))]^{-1}] [\ex_f \grad m_0(t) \grad^T m(t)] ([\ex_f A^T(m(t))]^{-1})^T)$$
+$$= Tr([\ex_f A^T(m(t))]^{-1}] ([\ex_f A^T(m(t))]^{-1})^T [\ex_f \grad m(t) \grad^T m(t)])$$
+$$= Tr( ([\ex_f A^T(m(t))][\ex_f A^T(m(t))]^T)^{-1} [\ex_f \grad m(t) \grad^T m(t)])$$
+$$\geq Tr(  ([\ex_f \grad m(t) \grad^T m(t)][\ex_{\grad f} \frac{1}{f(t)}\grad f(t)])^{-1} [\ex_f \grad m(t) \grad^T m(t)])$$
+$$= Tr( [\ex_{\grad f} \frac{1}{f(t)}\grad f(t)]^{-1} [\ex_f \grad m(t) \grad^T m(t)]^{-1} [\ex_f \grad m(t) \grad^T m(t)] )$$
+$$= Tr( [\ex_{\grad f} \frac{1}{f(t)}\grad f(t)]^{-1} = Tr(\Sigma(m_0,f_0)) \hspace{5 pt} \surd$$
+
+%PROBLEM 5, Step 3
+\pagebreak
+\noindent
+Step 3. Consequently it follows that:
+$$\grad m_0(t) \sqrt{f_0(t)} = \frac{-1}{\sqrt{f_0(t)}} \grad f_0(t)
+\Rightarrow \grad m_0(t) = -\frac{\grad f_0(y)}{f_0(y)} \hspace{5 pt} \surd$$
+
+$$\Rightarrow f_0(t) = \alpha_1 e^{-\frac{1}{2}t^2} \ind_{\{|t| < k\}} + \alpha_2 e^{-k|t|+\frac{1}{2}t^2} \ind_{\{|t|\geq k\}}$$
+
+\noindent
+Now from the construction of $f$, we know that $f_0(t) = (1-\delta)\frac{1}{\sqrt{2\pi}} e^{-t^2/2}+\delta h(t)$, so combining this with the results above yields:
+$$h_0(t) = \frac{1-\delta}{\sqrt{2\pi}} [e^{-k|t|+\frac{1}{2}t^2}-e^{-\frac{1}{2}t^2}] \ind_{\{|t| > k\}}$$
+And letting $\int h_0(t) dt = 1$ allows to find the value of $k$. $\square$
+
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}

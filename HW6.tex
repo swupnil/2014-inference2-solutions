@@ -1,0 +1,169 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6108 HW 6}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+% PROBLEM 1
+\noindent 
+(1) Firstly, we know from Inference I that the join distribution of the order statistics is $n!$. Additionally, we know that for every $t>0$, if the number of arrivals in the time interval $[0,t]$ follows a Poisson$(\lambda t)$ distribution, then we have that the sequence of inter-arrival times are independent and identically distributed Exponential$(\lambda)$ random variables. Hence, the conditional distribution we are attempting to find is equivalent to finding the conditional distribution of the (unit normalized) arrival times of the first $n$ arrivals, given that we know the arrival time of the $(n+1)th$ arrival.\\
+
+\noindent
+Hence, if we take $0 < t_1 < \cdots < t_n < 1$, it follows that the conditional probability that there is one arrival in each interval of the form $(t_i,t_i+dt_i)$ and no arrivals outside of the union of these intervals $(1-\sum_{i=1}^n dt_i)$, given that there are definitely $n$ arrivals in the (0,1) interval is approximately:
+
+$$f \biggl(\frac{S_1}{S_{n+1}},\cdots,\frac{S_n}{S_{n+1}} \biggr| S_{n+1} \biggr) 
+\approx \frac{e^{-(1-\sum_{i=1}^n dt_i)} \prod_{i=1}^n \frac{e^{-dt_i} dt_i}{1!}} {\frac{e^{-1}1^n}{n!}} 
+= \frac{n! e^{-(1-\sum_{i=1}^n dt_i)}e^{-\sum_{i=1}^n dt_i} dt_1\cdots dt_n}{e^{-1}}$$
+$$= n! dt_1\cdots dt_n. 
+\hspace{5 pt} \square$$ 
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 2
+%PART A
+\noindent
+(2) (a) Since we just showed that $X_{(k)}$ is equivalent in distribution to $\frac{S_k}{S_{n+1}}$, it follows that if $\frac{S_k}{S_{n+1}} \overset{p}\to \alpha$ then $X_{(k)}\overset{p}\to \alpha$ as well. $\surd$\\
+
+\noindent
+Now, using the Weak Law of Large Numbers and the definition of $\alpha$, we find:
+$$\frac{S_k}{S_{n+1}} 
+= \frac{\sum_{i=1}^k Y_i}{\sum_{i=1}^n Y_i}
+= \frac{\frac{1}{n}\sum_{i=1}^k Y_i}{\frac{1}{n}\sum_{i=1}^n Y_i}
+= \frac{\frac{\alpha}{k}\sum_{i=1}^k Y_i}{\frac{1}{n}\sum_{i=1}^n Y_i}
+= \alpha \frac{\frac{1}{k}\sum_{i=1}^k Y_i}{\frac{1}{n}\sum_{i=1}^n Y_i}
+\overset{p}\to \alpha \frac{\ex Y_1}{\ex Y_1}
+= \alpha. 
+\hspace{5 pt} \square$$
+
+%PART B
+\noindent
+(b) 
+$$\prob(\sqrt{n}(X_{(k)}-\alpha) \leq t)
+= \prob(X_{(k)} \leq \frac{t}{\sqrt {n}}+\alpha)
+= \prob(\sum_{i=1}^n \ind(X_i \leq \frac{t}{\sqrt {n}}+\alpha) \geq k)$$
+$$= \prob \biggl(\frac{1}{n} \sum_{i=1}^n \ind (X_i \leq \frac{t}{\sqrt {n}}+\alpha) \geq \alpha \biggr)$$
+$$= \prob \biggl\{ \sqrt{n} \biggl(\hat{F}_n \biggl(\frac{t}{\sqrt {n}}+\alpha \biggr)-F \biggl(\frac{t}{\sqrt {n}}+\alpha \biggr) \biggr)
+\geq \sqrt{n} \biggl(\alpha-F\biggl(\frac{t}{\sqrt {n}}+\alpha \biggr) \biggr) \biggr\}$$
+$$\approx 1-\Phi \biggl(\frac{\sqrt{n}(\alpha-F(\frac{t}{\sqrt {n}}+\alpha))}{\sqrt{F(\frac{t}{\sqrt {n}}+\alpha)(1-F(\frac{t}{\sqrt {n}}+\alpha))}}\biggr)$$
+Now we know that $F(\frac{t}{\sqrt {n}}+\alpha) 
+\to F(\alpha)$ so that $\sqrt{n}(F(\frac{t}{\sqrt {n}}+\alpha)-\alpha) \to f(\alpha)$. Consequently:
+$$\prob(\sqrt{n}(X_{(k)}-\alpha) \leq t) 
+\to 1-\Phi \biggl( \frac{-f(\alpha)t}{\sqrt{F(\alpha)(1-F(\alpha))}} \biggr)$$
+Hence, we find:
+$$\sqrt{n}(X_{(k)}-\alpha) 
+\overset{d}\to N \biggl(0,\frac{\alpha(1-\alpha)}{f^2(\alpha)} \biggr)
+= N \biggl(0,\frac{F(\alpha)(1-F(\alpha))}{f^2(\alpha)} \biggr)
+= N (0,\alpha(1-\alpha)). \hspace{5 pt} \square$$
+
+%PART C
+\noindent
+(c) As for the median, it is apparent that in the framework of (b), here we have $k=\frac{n}{2}$ so that $\alpha = \frac{1}{2}$. Thus:
+$$\sqrt{n}(X_{(\frac{n}{2})}-\frac{1}{2}) 
+\overset{d}\to N(0,\frac{1}{4}). \hspace{5 pt} \square$$ 
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 3
+%PART A
+\noindent
+(3) (a) We can utilize the cdf $F(x) = \int_{-\infty}^x f(x)dx$ to create a bijective mapping between $[0,1]$ and $\mathbb{R}$. Thus, if $X_i \overset{iid}\sim f$ then $U_i = F(X_i) \overset{iid}\sim U[0,1]$. Additionally, if we assume that $f(x)$ has no discontinuities, then it follows from the definition of $F$ that $F(x)$ is continuous in F. Consequently, from the Continuous Mapping Theorem we have that if we let $\alpha = \frac{k}{n}$, then:
+$$ X_{(k)} 
+= F^{-1}( F(X_{(k)})) 
+= F^{-1}(U_{(k)}) 
+\overset{p}\to F^{-1}(\alpha).
+\hspace{5 pt} \square$$
+
+%PART B
+\noindent
+(b) In the derivation of 2(b), we did not assume that $X$ was from a uniform distribution, until the very last step. Hence, we can apply the results to that problem here:
+$$\sqrt{n}(X_{(k)}-F^{-1}(\alpha)) 
+\overset{d}\to N \biggl(0,\frac{F(F^{-1}(\alpha))(1-F(F^{-1}(\alpha)))}{f^2(F^{-1}(\alpha))} \biggr)
+= N \biggl(0,\frac{\alpha(1-\alpha)}{f^2(F^{-1}(\alpha))} \biggr). \hspace{5 pt} \square$$
+
+%PART C
+\noindent
+(c) Similar to problem 2, the median is just a special case of part (b) with $\alpha = \frac{1}{2}$. Thus, if $m$ is the value such that $\int_{-\infty}^m f(x) dx = \frac{1}{2}$, then it follows that:
+$$\sqrt{n}(X_{(\frac{n}{2})}-m)
+= \sqrt{n}(X_{(\frac{n}{2})}-F^{-1}(\frac{1}{2}))
+\overset{d}\to N \biggl(0,\frac{\frac{1}{2}(1-\frac{1}{2})}{f^2(F^{-1}(\frac{1}{2}))} \biggr)
+= N \biggl(0,\frac{1}{4f^2(m)} \biggr). \hspace{5 pt} \square$$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 4  <-- Did Not Attempt
+
+% PROBLEM 5
+%PART A
+\noindent
+(5) (a) First note that:
+$$F_{T_n} (t)
+= \prod_{i=1}^n F_{X_i} (t)
+= F_X(t)^n 
+= (1-e^{-t})^n.$$
+Hence, it follows that:
+$$\prob(T_n - \log n \leq t) 
+= \prob(T_n \leq t+\log n)
+= (1-e^{-(t+\log n)})^n
+= \biggl(1-\frac{e^{-t}}{n} \biggr)^n
+\to e^{-e^{-t}}.$$
+Thus, $(T_n-\log n) \overset{d}\to Y$ where $F_Y = e^{-e^{-t}}.$ $\square$\\
+
+%PART B
+\noindent
+(b) First note that:
+$$F_{T_n}(t)
+= \prod_{i=1}^n F_{X_i}(t)
+= F_X(t)^n
+= (1-t^{-\alpha})^n.$$
+Hence, it follows that:
+$$\prob(n^{-1/\alpha}T_n \leq t) 
+= \prob(T_n \leq t n^{1/\alpha})
+= (1-(tn^{1/\alpha})^{-\alpha})^n
+= \biggl(1-\frac{t^{-\alpha}}{n} \biggr)^n
+\to e^{-t^{-\alpha}}.$$
+Thus, $n^{-1/\alpha}T_n \overset{d}\to Y$ where $F_Y = e^{-t^{-\alpha}}.$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 6
+
+\noindent
+(6) We have from (a) that:
+$$G_n(\theta_0)+o_p(1) \overset{p}\to G(\theta) + 0 = G(\theta).$$
+Additionally, from $(a)$ it follows that there exists a $\theta^*$ such that:
+$$\prob(|G_n(\hat{\theta}_n)-G(\theta^*)|>\varepsilon) \to 0$$
+Consequently, from the given constraint on $G_n(\hat{\theta}_n)$ it follows that:
+$$G_n(\hat{\theta}_n) \overset{p}\to G(\theta^*) \geq G(\theta)$$
+Now, condition (b) implies that $G(\theta_0)$ is the unique maximizer of $G(\theta)$ across all $\theta \in \Theta$. Thus:
+$$\theta^* = \theta \Rightarrow \hat{\theta}_n \overset{p}\to \theta_0. \hspace{5 pt} \square$$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}

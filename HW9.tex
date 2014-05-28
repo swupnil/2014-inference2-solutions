@@ -1,0 +1,144 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6108 HW 9}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+% PROBLEM 1
+\noindent 
+1. In the proof we discovered that:
+$$(*) f_0(x) = \alpha e^{-x^2/2}\ind(|X|<k)+\alpha e^{-k|x|+k^2/2}\ind(|X|\geq k).$$ 
+Additionally we know by definition that we must have: 
+$$(**) f_0(x) = (1-\varepsilon)\frac{1}{\sqrt{2\pi}}e^{-x^2/2}+\varepsilon h(x)$$ 
+where we showed that $h(x)$ has no mass when $|X|<k$. Thus it follows from $(**)$ that $f_0(x) = (1-\varepsilon)\frac{1}{\sqrt{2\pi}}e^{-x^2/2}$ over the region where $|X|<k$ since $h(x)$ vanishes. Aditonally from $(*)$ it follows that $f_0(x) = \alpha e^{-x^2/2}$ over the same region. Thus it is clear now that $\alpha =  (1-\varepsilon)\frac{1}{\sqrt{2\pi}}$. $\surd$\\
+
+\noindent
+Now, over the regions where $|X|\geq k$ we have:
+$$\alpha e^{-k|x|+k^2/2}\ind(|X|\geq k) = f_0(x) = (1-\varepsilon)\frac{1}{\sqrt{2\pi}}e^{-x^2/2}+\varepsilon h(x)$$
+so that:
+$$h(x) = \frac{1-\varepsilon}{\varepsilon\sqrt{2\pi}} [e^{-k|x|+k^2/2} - e^{-x^2/2}]\ind(|X|\geq k)$$
+which is a function of $k$. Hence we can easily find $k$ by setting $1 = \int_{|X|\geq k} h(x) dx$. $\surd$
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 2
+\noindent 
+2. We notice immediately that:
+$$I(f) = \int \frac{f'^2}{f} d\mu
+= \int \frac{f'^2}{f^2} f d\mu
+= \int \biggl( \frac{f'}{f} \biggr)^2 f d\mu
+= \int \biggl( \frac{\partial}{\partial f} \log f \biggr)^2 f d\mu
+= \ex \biggl[ \biggl( \frac{\partial}{\partial f} \log f \biggr)^2 \biggr]$$
+Hence, the integral is equivalent to the Fisher Information, meaning that the integral is concave. $\square$
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+
+% PROBLEM 3
+\noindent 
+3. Since we assume $\sigma_x \approx 0$ we can then assume that $X \sim N(\mu,0)$ and $Y \sim N(\mu, \sigma_y^2)$ so that $\bar{X} \sim N(\mu,0)$ and $\bar{Y}\sim  N(\mu,\sigma_y^2/m)$. Thus, $\bar{X}-\bar{Y} \sim N(0, \sigma_y^2/m)$ and:
+$$\sqrt{\frac{s_x^2}{n}+\frac{s_y^2}{m}} \approx \sqrt{\frac{s_y^2}{m}}
+\sim \frac{\sigma}{\sqrt{m}}\sqrt{ \frac{\chi^2_{m-1}}{m-1}}$$
+Consequently, it follows that:
+$$0.02 = \prob \biggl( \frac{|\bar{X}-\bar{Y}|}{ \sqrt{\frac{s_x^2}{n}+\frac{s_y^2}{m}}}>T \biggr| H_0 \biggr)
+\approx \prob \biggl( \frac{|\bar{X}-\bar{Y}|}{ \sqrt{\frac{s_y^2}{m}}}>T \biggr| H_0 \biggr)
+= \prob \biggl( \frac{|N(0,1)|}{ \sqrt{\frac{\chi_{m-1}^2}{m-1}}}>T \biggr| H_0 \biggr)
+= \prob (|t_{m-1}| > T | H_0)$$
+Thus, it follows that $T = t_{5-1,.995} = 4.606$. $\square$\\
+
+\noindent
+Upon conducting a simulation, we found that the empirical Type 1 error was: 0.00604\\
+
+\noindent
+According to the Neyman-Pearson Paradigm, the probability of type I error should be equal to the significance level, so for the cutoff we determined, the true significance level is probably around 0.006.
+
+%CODE FOR PROBLEM 3
+\pagebreak
+\noindent
+CODE:
+\lstinputlisting{HW9.R}
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 4
+\noindent 
+4. If we let $A_i = [X_{(i)},X_{(i+1)}]$, we note that:
+$$K = \sup_x |\hat{F}_n(x)-\Phi((x-\hat{\mu})/\hat{\sigma})|
+= \max_{0 \leq i \leq n} \sup_{x\in A_i} |\hat{F}_n(x)-\Phi((x-\hat{\mu})/\hat{\sigma})|$$
+$$= \max_{0 \leq i \leq n} \max \biggl\{ \biggl| \frac{i}{n}-\Phi((x_{(i)}-\hat{\mu})/\hat{\sigma}) \biggr|, \biggr| \frac{i}{n}-\Phi((x_{(i+1)}-\hat{\mu})/\hat{\sigma}) \biggr| \biggr\}$$
+$$= \max_{0 \leq i \leq n} \max \biggl\{ \biggl| \frac{i}{n}-\Phi(z_{(i)}) \biggr|,  \biggr| \frac{i}{n}-\Phi(z_{(i+1)}) \biggr| \biggr\}$$
+where $z_i = (x_i-\hat{\mu})/\hat{\sigma}$. Now we know that $x_i \sim N(\mu,\sigma^2)$, $\hat{\mu} \sim N(\mu,\sigma^2/n)$ and $\hat{\sigma}^2 \sim \sigma^2 \chi_n^2 /n$. Consequently:
+$$z_i =_d \frac{N(\mu,\sigma^2)-N(\mu,\sigma^2/n)}{\sqrt{\sigma^2 \chi_n^2/n}}
+=_d \frac{N(0,\sigma^2(n-1)/n)}{\sigma \sqrt{\chi_n^2/n}}
+=_d \sqrt{\frac{n}{n-1}}\frac{N(0,1)}{\sigma \sqrt{\chi_n^2/n}} 
+=_d \sqrt{\frac{n}{n-1}} t_{n}$$
+Thus, $z_i$ follow a $t$ distribution independent of $\mu$ and $\sigma$, showing that the distribution of $K$ (and, hence, the probability of Type I error) is independent of $\mu$ and $\sigma$. $\square$\\
+
+\noindent
+If we replace $\Phi$ with an exponential CDF, under the null hypothsesis $f(x) = \sigma e^{-\sigma(x-\mu)}$ which leads to the maximum likelihood estimates of $\hat{\mu} = \min(x_1,\dots,x_n)$ and $\hat{\sigma} = (\bar{x}-\hat{\mu})^{-1}$. Consequently, the probability of Type I error should change because previously $K$ depended on the distribution of a normal cdf applied to the order statistics of a $t$ distribution. In this scenario, we will be applying an exponential cdf to the order statistics of some other distribution, possibly more complicated than the $t$. 
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 5 PART 1
+\pagebreak
+\noindent 
+5. (i) We first note that in general, $r(x) = p_\theta(x) /p_{\theta_0}(x) = \theta_0^n / \theta^n$ if all of the $x_i \in [0,\theta_0]$ and $r(x) = \infty$ if at least one of the $x_i > \theta_0$. This then implies that $r(x) = \infty$ when there exists an $x_i > \theta_0$, which happens if and only if $\max(x_1,\dots,x_n) > \theta_0$. In this case, clearly it is impossible that $\theta \leq \theta_0$ so it follows that we should set $\phi(x) = 1$ when $\max (x_1,\dots,x_n) > \theta_0$. $\surd$\\
+
+\noindent
+Now the overall solution should be to find $K$ so that $\phi(x) =1$ when $\max (x_1,\dots,x_n) > K$ and $\phi(x)=0$ otherwise. Then, under this framework we note that:
+$$ \ex_\theta[\phi(x)] = \prob(\max(x_1,\dots,x_n)>K|\theta)\cdot 1+\prob(\max(x_1,\dots,x_n)<K|\theta)\cdot 0$$
+$$= \prob(\max(x_1,\dots,x_n)>K|\theta) = \frac{\theta-K}{\theta}\ind(K \leq \theta)$$
+Now, to have the uniformly most powerful test we would like to maximize the above quantity (i.e. the power) for $\theta \in \theta_1$ but need to make sure the above quantity is less than $\alpha$ for $\theta\in\Theta_0$. Thus, we essentially want to minimize $K$ subject to the constraint:
+$$\theta\in\Theta_0: \frac{\theta-K}{\theta} \leq \alpha \Rightarrow K \geq (1-\alpha)\theta$$ 
+Consequently, the smallest we can make $K$ is $(1-\alpha)\theta_0$. Then we have:
+$$\ex_{\theta_0}[\phi(x)] = \frac{\theta_0-(1-\alpha)\theta_0}{\theta_0} 
+= \frac{\alpha\theta_0}{\theta_0} 
+= \alpha.$$
+Additionally, for $\theta < (1-\alpha)\theta_0$ we have $\ex_{\theta}[\phi(x)] = 0$, and for $(1-\alpha)\theta_0 < \theta < \theta_0$ we have:
+$$\ex_{\theta}[\phi(x)]  = \frac{\theta-(1-\alpha)\theta_0}{\theta}
+= 1-\frac{\theta_0(1-\alpha)}{\theta}$$
+$$\leq  1-\frac{\theta_0(1-\alpha)}{\theta_0}
+= \alpha. 
+\hspace{5 pt} \surd 
+\hspace{5 pt} \square$$
+
+%PROBLEM 5 PART 2
+\noindent
+(ii) From the previous problem, it is clear that if $\max(x_1,\dots,x_n) > \theta_0$, it is impossible that $\theta=\theta_0$, so we should set $\phi(x)=1$ in this situation. $\surd$\\
+
+\noindent
+Now since we also need to consider $\theta < \theta_0$ as an alternative hypothesis, we should also set $\phi(x) = 1$ when $\max(x_1,\dots,x_n) < K$ for some $K$. Then it follows that for $\theta \leq \theta_0$:
+$$\ex_\theta[\phi(x)] 
+= (\prob(\max(x_1,\dots,x_n) < K|\theta)+\prob(\max(x_1,\dots,x_n) > \theta_0|\theta))\cdot 1 + \prob(K<\max(x_1,\dots,x_n) < \theta_0|\theta)\cdot 0$$
+$$= ((k/\theta)^n + 0)\cdot 1+0 = (k/\theta)^n$$
+Thus we want to maximize $\ex_\theta[\phi(x)]  = (k/\theta)^n$ for $\theta<\theta_0$ (i.e. make $k$ as big as possible) subject to the constraint that $\alpha > \ex_{\theta_0}[\phi(x)] = (k/\theta_0)^n$, which is equivalent to the constraint that $k \leq \theta_0 \sqrt[n]{\alpha}.$ The optimal solution is to then set $K = \theta_0 \sqrt[n]{\alpha}$ so that $\phi(x) = 1$, if $\max(x_1,\dots,x_n) < \theta_0 \sqrt[n]{\alpha}$. $\surd$ $\square$
+
+ \begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}

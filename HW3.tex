@@ -1,0 +1,218 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai (Time: 6 Hours)}
+\fancyhead[L]{Stat G6107 HW 3}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+
+% PROBLEM 1
+
+\noindent
+(1) $p_\theta (x) = \prod_{i=1}^n \frac{1}{\theta} \ind\{X_i \geq \theta\}\ind\{X_i \leq 2\theta\}
+= \frac{1}{\theta^n} \ind\{X_{(1)} \geq \theta\} \ind\{X_{(n)} \leq 2\theta\}.$\\
+Then, $\frac{p_\theta(x)}{p_\theta(y)} = \frac{1/\theta^n \ind\{X_{(1)} \geq \theta\} \ind\{X_{(n)} \leq 2\theta\}}{1/\theta^n \ind\{Y_{(1)} \geq \theta\} \ind\{Y_{(n)} \leq 2\theta\}} =  \frac{ \ind\{X_{(1)}\geq \theta\}\ind\{X_{(n)} \leq 2\theta\}}{\ind\{Y_{(1)} \geq \theta\} \ind\{Y_{(n)} \leq 2\theta\}}$\\
+\indent\indent $= c(x,y)$ if and only if $(X_{(1)},X_{(n)}) = (Y_{(1)},Y_{(n)})$.\\
+Hence, $(X_{(1)},X_{(n)})$ is a minimal sufficient statistic. $\square$\\
+
+\noindent
+However, $\ex X_{(n)} = \theta+\frac{n}{n+1}\theta = \frac{2n+1}{n+1}\theta$ and $\ex X_{(1)} = \theta+\frac{1}{n+1}\theta = \frac{n+2}{n+1}\theta$.\\
+Thus, $\ex f = \ex [\frac{n+1}{2n+1}X_{(n)}-\frac{n+1}{n+2}X_{(1)}] = \theta-\theta = 0$, yet $f(X_{(1)},X_{(n)})$ is not constant.\\ Hence, $(X_{(1)},X_{(n)})$ is not complete.\\
+
+\noindent
+Now, suppose some complete sufficient statistic $C$ exists. Then, since $T = (X_{(1)},X_{(n)})$ is minimal, it must be the case that since $C$ is sufficient, there exists a function $g$ such that $T=g(C)$. However, we just showed above that there exists a non constant function $f$ such that $0 = \ex f(T) = \ex f(g(C))$. Hence, there exists a non constant function $h = f \circ g$ such that $\ex h(C) = 0$, implying that no complete sufficient statistic exists. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 2
+
+\noindent
+(2) Consider $\ex X^k - \ex X_1^k = \int_0^\infty x^k f(x) dx - \int_0^\infty x^k f(x)(1+\sin(2\pi\log x)) dx$\\
+\indent $= - \int_0^\infty x^k f(x) \sin(2\pi \log x) dx
+= - \int_0^\infty x^k \frac{1}{\sqrt{2\pi}x}\exp\{-(\log x)^2/2\} \sin (2\pi \log x) dx$\\
+\indent $= - \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi}}\exp\{u(k-u/2)\}\sin(2\pi u) du$\\
+\indent $= -\frac{1}{4}\exp\{(k-2i\pi)^2/2\}($erfi$(\frac{ik-iu+2\pi}{\sqrt{2}})+\exp\{4i\pi k\}$erfi$(\frac{-ik+iu+2\pi}{\sqrt{2}})) \biggr|_{u=-\infty}^\infty$\\
+\indent $= 0$ for all $k$. 
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 3
+
+\noindent
+(3) Consider $U_i = (X_i,Y_i,X_i^2,Y_i^2,X_iY_i)^T$. Then it follows that $\hat{\rho}_n = g(\bar{U}_n)$, where:\\
+
+\noindent
+\indent $g((u_1,u_2,u_3,u_4,u_5)^T) = \frac{u_5-u_1u_2}{(u_3-u_1^2)^{1/2}(u_4-u_2^2)^{1/2}}$.\\
+
+\noindent
+Now, clearly $g$ is smooth and $\grad g$ is simple to compute. Then if we let $\mu = \ex U_i$ and assume that $X_i$ and $Y_i$ have finite fourth moments, then from the CLT, we have that:
+$\sqrt{n}(\bar{U}_n-\mu) \overset{d}\to N(0,\Sigma)$,
+where $\Sigma$ is the covariance matrix of $U_1$.\\
+
+\noindent
+Thus, from the delta method: $\sqrt{n}(\hat{\rho}_n-\rho) = \sqrt{n} [g(\bar{U}_n)-g(\mu)] \overset{d}\to N(0,\grad g(\mu) \Sigma \grad g^T(\mu)).$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 4
+
+\noindent
+(4) (a) $\lim\limits_{n\to\infty} \frac{n \log n + n^{1.0001}}{n \log^2 n} 
+=\lim\limits_{n\to\infty} \frac{1}{\log n}+\lim\limits_{n\to\infty} \frac{n^{.0001}}{\log^2 n}
+=0+ \lim\limits_{n\to\infty} \frac{.0001}{2 n^{.9999}\log n} = 0$. True.\\
+
+(b) $n \log n + n(\log \log n)^3 < n \log n + n \log n = 2 n \log n$ for $n$ large enough. True.\\
+
+(c) $\lim\limits_{n\to\infty} \frac{100n^{10}}{e^{0.1n}} = \lim\limits_{n\to\infty} \frac{100\cdot 10 n^{9}}{0.1e^{0.1n}} 
+= \lim\limits_{n\to\infty} \frac{100\cdot 10 \cdot 9 n^{8}}{(0.1)^2e^{0.1n}}
+= \cdots = \lim\limits_{n\to\infty} \frac{100\cdot 10!}{(0.1)^{10}e^{0.1n}} = 0.$ True.\\
+
+(d) $\lim\limits_{n\to\infty} \frac{a_n}{b_n \log n} 
+\leq \lim\limits_{n\to\infty} \frac{C\cdot b_n}{b_n \log n}
+= \lim\limits_{n\to\infty} \frac{C}{\log n} = 0.$ True.\\
+
+(e) $\lim\limits_{n\to\infty} \frac{\log n}{n} = \lim\limits_{n\to\infty} \frac{1}{n} = 0$. True.\\
+
+(f) Since $\log x < 0$ for all $x < 1$, it follows that for $x$ near $0$, $-x \log x + x^{1.1} > x^{1.1}$. False.
+
+\pagebreak
+% PROBLEM 5
+
+\noindent
+(5) Since $\hat{p}_{3,n}$ and $p_3$ are determined completely by $\hat{p}_{1,n},\hat{p}_{2,n}, p_1,$ and $p_2$, we need only consider two variables.\\
+
+\noindent
+Now, $\ex \left[ \begin{array}{c} \hat{p}_{1,n}\\ \hat{p}_{2,n} \end{array} \right]
+= \ex  \left[ \begin{array}{c} \frac{1}{n} \sum \ind\{X_j=1\} \\  \frac{1}{n} \sum \ind\{X_j=2\} \end{array} \right]
+= \left[ \begin{array}{c} \frac{1}{n} \sum \ex\ind\{X_j=1\} \\  \frac{1}{n} \sum \ex\ind\{X_j=2\} \end{array} \right]
+= \left[ \begin{array}{c} \ex\ind\{X_j=1\} \\  \ex\ind\{X_j=2\} \end{array} \right]
+= \left[ \begin{array}{c} p_1\\  p_2 \end{array} \right].$\\
+Thus, from WLLN, $\left[ \begin{array}{c} \hat{p}_{1,n}\\ \hat{p}_{2,n} \end{array} \right]
+\overset{p}\to \left[ \begin{array}{c} p_1\\  p_2 \end{array} \right]$.\\
+
+\noindent
+Additionally, Var$(\hat{p}_{1,n}) =$ Var$(\frac{1}{n}\sum\ind\{X_j=1\}) 
+= \frac{1}{n^2}\cdot n\cdot $Var$(\ind\{X_j=1\})
+= \frac{1}{n}[p_1-p_1^2].$\\
+
+\noindent
+Furthermore, Cov$(\hat{p}_{1,n},\hat{p}_{2,n}) =  \frac{1}{n^2}\cdot n \cdot$ Cov$(\ind\{X_j=1\},\ind\{X_i=2\})$\\
+\indent \indent $= \frac{1}{n}\ex \ind\{X_j=1=2\}
+-\frac{1}{n}\ex \ind\{X_j=1\}\ex\ind\{X_j=2\} = -\frac{1}{n}p_1p_2$.\\
+
+\noindent
+As such, $\sqrt{n} \left[ \begin{array}{c} \hat{p}_{1,n}-p_1\\ \hat{p}_{2,n}-p_2 \end{array} \right] \overset{d}\to N(0,\Sigma)$, where
+$\Sigma = \left[ \begin{array}{cc} p_1(1-p_1) & -p_1p_2\\ -p_1p_2 & p_2(1-p_2) \end{array} \right]$.\\
+
+\noindent
+Now, using the Mahalanobis Transformation, we have that: 
+$\sqrt{n}\Sigma^{-1/2} \left[ \begin{array}{c} \hat{p}_{1,n}-p_1\\ \hat{p}_{2,n}-p_2 \end{array} \right] 
+\overset{d}\to N(0,I_2)$.\\
+
+\noindent
+Thus, $Y_n = n \left[ \begin{array}{cc} \hat{p}_{1,n}-p_1& \hat{p}_{2,n}-p_2 \end{array} \right] 
+\Sigma^{-1} \left[ \begin{array}{c} \hat{p}_{1,n}-p_1\\ \hat{p}_{2,n}-p_2 \end{array} \right] 
+\overset{d}\to \chi^2_2$.\\
+
+\noindent
+Now, $Y_n = n \left[ \begin{array}{cc} \hat{p}_{1,n}-p_1& \hat{p}_{2,n}-p_2 \end{array} \right] 
+\left[ \begin{array}{cc} \frac{1-p_2}{p_1(1-p_1-p_2)} & \frac{1}{1-p_1-p_2}\\ 
+\frac{1}{1-p_1-p_2} & \frac{1-p_1}{p_2(1-p_1-p_2)} \end{array} \right] 
+\left[ \begin{array}{c} \hat{p}_{1,n}-p_1\\ \hat{p}_{2,n}-p_2 \end{array} \right] $\\
+
+\indent\indent
+$= n\frac{(p_2-p_2^2)(\hat{p}_{1,n}-p_1)^2+2p_1p_2(\hat{p}_{1,n}-p_1)(\hat{p}_{2,n}-p_2)+(p_1-p_1^2)(\hat{p}_{2,n}-p_2)^2}{p_1p_2(1-p_1-p_2)}$\\
+
+\indent\indent
+$= n\frac{\hat{p}_{1,n}^2-2p_1\hat{p}_{1,n}+p_1^2}{p_1}
++n\frac{\hat{p}_{2,n}^2-2p_2\hat{p}_{2,n}+p_2^2}{p_2}
++n\frac{(p_1+p_2)^2-2(p_1+p_2)(\hat{p}_{1,n}+\hat{p}_{2,n})+(\hat{p}_{1,n}+\hat{p}_{2,n})^2}{1-p_1-p_2}$\\
+
+\indent\indent
+$= n\frac{(\hat{p}_{1,n}-p_1)^2}{p_1}
++n\frac{(\hat{p}_{2,n}-p_2)^2}{p_2}
++n\frac{((p_1+p_2)-(\hat{p}_{1,n}+\hat{p}_{2,n}))^2}{1-p_1-p_2}$\\
+
+\indent\indent
+$= n\frac{(\hat{p}_{1,n}-p_1)^2}{p_1}
++n\frac{(\hat{p}_{2,n}-p_2)^2}{p_2}
++n\frac{(\hat{p}_{3,n}-p_3)^2}{p_3}$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\pagebreak
+% PROBLEM 6
+
+\noindent
+(6) Our goal is to show that $||Y||_2 = ||  \left[ \begin{array}{c} f_1(\theta+h)\\ f_2(\theta+h) \\ \vdots \\ f_m(\theta+h) \end{array} \right]
+- \left[ \begin{array}{c} f_1(\theta)+\triangledown f_1^T(\theta)h \\ 
+f_2(\theta)+\triangledown f_2^T(\theta)h  \\ \vdots \\ 
+f_m(\theta)+\triangledown f_m^T(\theta)h \end{array} \right] ||_2 = o(||h||).$\\
+
+\noindent
+Since the conditions for each row are the same, we need only prove the result for any arbitrary row, whereby $\lim\limits_{||h||\to 0} \frac{||Y_i||_2}{||h||} = 0$ iff $\lim\limits_{||h|| \to 0} \frac{||Y||_2}{||h||} = \lim\limits_{||h||\to 0} \frac{\sum_{i=1}^n ||Y_i||_2}{||h||} = 0$.\\
+
+\noindent
+Firstly, define $g_i(t) = f_i(t(\theta+h)+(1-t)\theta)$.\\
+Then, $g_i(0)=f_i(\theta), g_i(1)=f_i(\theta+h)$ and $g_i(1)-g_i(0)=g_i'(\xi)$ for some $\xi \in (0,1)$.\\
+Additionally, $g_i'(\xi) = \frac{\partial g_i}{\partial t} = \sum_j \frac{\partial f_i}{\partial x_j}\frac{\partial x_j}{\partial t} h_i = \triangledown f_i^T(\overset{\sim}\theta)h$, where $\overset{\sim}\theta = \xi(\theta+h)+(1-\xi)\theta$.\\
+
+\noindent
+Whence, $||f_i(\theta+h)-f(\theta)-\triangledown f_i^T(\theta)h||_2 
+= ||f_i(\theta)+\grad f_i^T(\overset{\sim}\theta)h-f_i(\theta)-\grad f_i^T(\theta)h||_2$\\
+\indent $= ||\grad f_i^T(\overset{\sim}\theta)h-\grad f_i^T(\theta)h||_2$\\
+
+\noindent
+Thus, $\lim\limits_{||h||\to 0} \frac{||Y_i||_2}{||h||}
+= \lim\limits_{||h||\to 0} \frac{||\grad f_i^T(\overset{\sim}\theta)h-\grad f_i^T(\theta)h||_2}{||h||}
+\leq \lim\limits_{||h||\to 0} \frac{||\grad f_i^T(\overset{\sim}\theta)-\grad f_i^T(\theta)||_2 \cdot ||h||}{||h||}
+= \lim\limits_{||h||\to 0} ||\grad f_i^T(\overset{\sim}\theta)-\grad f_i^T(\theta)||_2$\\
+\indent\indent\indent = 0, due to the continuity of the components of $\grad f_i$. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+% PROBLEM 7
+
+\noindent
+(7) Firstly, define $g(t) = f(t(\theta+h)+(1-t)\theta).$\\
+Then, $g(0) = f(\theta), g(1) = f(\theta+h)$ and $g'(1)-g'(0) = g''(\xi)$ for some $\xi \in (0,1)$.\\
+Here, $g''(\xi) = \frac{\partial^2 g}{\partial t^2} 
+= \sum_i \sum_j (\frac{\partial^2 f}{\partial x_i \partial x_j} \frac{\partial x_i}{\partial t} \frac{\partial x_j}{\partial t} 
++ \frac{\partial f}{\partial x_i} \frac{\partial^2 x_i}{\partial t^2}) 
+= H(\overset{\sim}\theta)h$, where $\overset{\sim}\theta = \xi(\theta+h)+(1-\xi)\theta$.\\
+
+\noindent
+Whence, $|f(\theta+h)-f(\theta)-\grad f^T(\theta)h| 
+= |f(\theta)+\grad f(\theta)h+\frac{1}{2}h^TH(\overset{\sim}\theta)h-f(\theta)-\grad f(\theta) h| 
+= \frac{|h^T H(\overset{\sim}\theta) h|}{2}$\\
+\indent\indent $\leq \frac{|h^T (C h)|}{2} = \frac{C ||h||^2}{2}.$ $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}

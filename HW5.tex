@@ -1,0 +1,222 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{Stat G6108 HW 5}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+% PROBLEM 1
+
+\noindent 
+(1) We know from class that $T=(\sum_{i=1}^nX_i,\sum_{i=1}^n X_i^2)$ is a complete sufficient statistic for this problem. As such, if we can find a unbiased estimator $\delta_r$ for $\sigma^r$, with $\delta_r = f(T)$, then it will follow that $\delta_r$ is UMVU.\\
+To that end, we consider the well known unbiased estimator of $\sigma^2$:
+$$s^2 = \frac{1}{n-1} \sum\limits_{i=1}^n (X_i-\bar{X})^2$$
+which is a function of $T$. Hence we know that $\delta_2 = s^2$ is UMVU for $\sigma^2$. Additionally, we know from class that:
+$$ \frac{(n-1)s^2}{\sigma^2} \sim \chi_{n-1}^2
+{\rm \hspace{3 pt}, \hspace{3 pt} implying \hspace{3 pt} that \hspace{3 pt}}s^2 \sim \frac{\sigma^2}{n-1}\chi_{n-1}^2.$$
+Now, to extend this result, consider $s^r \overset{\triangle}= (s^2)^{\frac{r}{2}} = f_r(T)$. Then, letting $Y \sim \chi_{n-1}^2$ it follows that:
+$$ \ex s^r = \ex [s^2]^{\frac{r}{2}} 
+= \biggl(\frac{\sigma^2}{n-1}\biggr)^{\frac{r}{2}} \ex \biggl[\frac{s^2(n-1)}{\sigma^2}\biggr]^{\frac{r}{2}}
+= \biggl(\frac{\sigma^2}{n-1}\biggr)^{\frac{r}{2}} \ex Y^{\frac{r}{2}}$$
+$$= \biggl(\frac{\sigma^2}{n-1}\biggr)^{\frac{r}{2}} \int_0^\infty y^{\frac{r}{2}} \frac{(1/2)^{\frac{n-1}{2}}}{\Gamma(\frac{n-1}{2})}y^{\frac{n-1}{2}-1}e^{-\frac{y}{2}}dy$$
+$$= \frac{\sigma^r}{(n-1)^{\frac{r}{2}}} \cdot \frac{\Gamma(\frac{n-1+r}{2})}{\Gamma(\frac{n-1}{2})} \cdot \frac{(1/2)^{\frac{n-1}{2}}}{(1/2)^{\frac{n-1+r}{2}}}
+\underbrace{\int_0^\infty \frac{(1/2)^{\frac{n-1+r}{2}}}{\Gamma(\frac{n-1+r}{2})}y^{\frac{n-1+r}{2}-1}e^{-\frac{y}{2}}dy}_{\chi_{n-1+r}^2}$$
+$$=\sigma^r \biggl(\frac{2}{n-1}\biggr)^{\frac{r}{2}} \cdot \frac{\Gamma(\frac{n-1+r}{2})}{\Gamma(\frac{n-1}{2})} \cdot 1
+= K \sigma^r.$$
+Consequently, for any $r\in\mathbb{N}$, the following estimator is UMVU for $\sigma^r$:
+$$\delta_r = \frac{1}{K} s^r = \biggl(\frac{n-1}{2}\biggr)^{\frac{r}{2}} \cdot \frac{\Gamma(\frac{n-1}{2})}{\Gamma(\frac{n-1+r}{2})} [s^2]^{\frac{r}{2}}
+= \frac{\Gamma(\frac{n-1}{2})}{\Gamma(\frac{n-1+r}{2})} 
+\biggl[\frac{1}{2} \sum\limits_{i=1}^n (X_i-\bar{X})^2\biggr]^{\frac{r}{2}}. 
+\hspace{10 pt} \square$$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%Problem 2
+\pagebreak
+\noindent
+(2) a. To find $a_k$ we need to find $t$ such that $A_k(t) = 1$, where:
+$$A_k(t) = \int_{0}^{t} c dx + \int_{t}^{a_{k-1}} e^{\frac{1}{x^2}}dx + \int_{a_{k-1}}^{1} c dx = c(1-a_{k-1}+t)+\int_{t}^{a_{k-1}} e^{\frac{1}{x^2}}dx$$
+Since $A_k(a_{k-1}) = c < 1< \infty = A_k(0)$, it follows from the Intermediate Value Theorem that there must exist a $t \in (0,a_{k-1})$ such that $A_k(t) = 1$. Hence, for any $k$, we have $0 < a_k < a_{k-1}. \hspace{10 pt} \square$\\
+
+\noindent
+Now, since $a_k$ is decreasing and bounded below by $0$, it follows that there exists a $B$ such that:
+$$\lim_{k\to\infty} a_k = B \geq 0.$$ 
+Suppose $B>0$. 
+Since $B < a_{k-1} \leq 1$, it follows that: 
+$$c(1-a_{k-1}+B) < c(1-a_{k-1}+a_{k-1}) = c.$$ 
+Additionally, since $\lim_{k\to \infty} a_k = B$, it follows that:
+$$\lim_{k\to \infty} \int_{B}^{a_{k-1}}e^{\frac{1}{x^2}}dx = 0.$$ 
+Thus there exists a $k^*$ such that: 
+$$\int_{B}^{a_{k^*-1}}e^{\frac{1}{x^2}} dx < 1-c,$$ 
+at which point:
+$$A_{k^*}(B) = c(1-a_{k^*-1}+B) + \int_{B}^{a_{k^*-1}}e^{\frac{1}{x^2}}dx < c +(1-c) = 1.$$
+Hence, we have established that $A_{k^*}(B) < 1$ and $A_{k^*}(a_{k^*-1}) = c <1$.\\
+Now note that for any $t$, $\varepsilon>0$:
+$$A_{k^*}(t-\varepsilon) = c(1-a_{k^*+1}+t-\varepsilon) + \int_{t-\varepsilon}^{a_{k^*-1}}e^{\frac{1}{x^2}}dx
+= c(1-a_{k^*+1}+t-\varepsilon) + \int_{t-\varepsilon}^{t}e^{\frac{1}{x^2}}dx +  \int_{t}^{a_{k^*-1}}e^{\frac{1}{x^2}}dx$$
+$$> c(1-a_{k^*+1}+t-\varepsilon) + \int_{t-\varepsilon}^{t}c dx +  \int_{t}^{a_{k^*-1}}e^{\frac{1}{x^2}}dx
+= c(1-a_{k^*+1}+t-\varepsilon) + c\varepsilon +  \int_{t}^{a_{k^*-1}}e^{\frac{1}{x^2}}dx = A_{k^*}(t).$$
+Thus, $A_{k^*}(t)$ is decreasing in $t$, showing that for all $t \in (B,a_{k^*-1})$, we have $A_{k^*}(t) < A_{k^*}(B) < 1$. Whence, there exists no $t \in (B,a_{k^*-1})$ such that $A_{k^*}(t) = 1$, a contradiction.
+Therefore, $B=0. \hspace{5 pt} \square$ \\
+
+\noindent
+b. Since $h(x)$ is decreasing in $x$, it follows that $h(X_{(1)}) \geq h(X_{(2)}) > c$. Let $k_1 = k$ such that $X_{(1)} \in (a_k,a_{k-1}]$ and let $k_2 = k$ such that $X_{(2)} \in (a_k,a_{k-1}]$ (note that $k_1$ and $k_2$ may be the same). Now, since $X_{(1)} \leq X_{(2)}$, and $a_k < a_{k-1}$, it follows that $k_1 \leq k_2$. Then:
+$$p_{k_2}(X_1,X_2) = h(X_1)h(X_2) = p_{k_1}(X_1,X_2) \hspace{5 pt} {\rm if} \hspace{5 pt} k_1 = k_2 $$
+$$p_{k_2}(X_1,X_2) = c \cdot h(X_2) < h(X_1) \cdot c = p_{k_1}(X_1,X_2) \hspace{5 pt} {\rm if} \hspace{5 pt} k_1 \neq k_2 $$
+Consequently, $p_{k_1}(X_1,X_2) \geq p_{k_2}(X_1,X_2) > c^2 = p_{j}(X_1,X_2)$ for any $j \neq k_1,k_2$. Hence, $k_{ML} = k_1$.\\ 
+
+\pagebreak
+\noindent
+c. Let the data be generated from $p_{k^*}$. Then, for any $\varepsilon < k^*$:
+$$\prob(|X_{(1)}| > \varepsilon) = \prob(X_{(1)}>\varepsilon) = \prod\limits_{i=1}^n \prob(X_i > \varepsilon)
+= \prod_{i=1}^n (1-\int_{0}^\varepsilon c dx)
+= (1-c\varepsilon)^n \to 0. \hspace{10 pt} \square$$
+
+\noindent
+d. Using the definition of the likelihood, for any finite $j$ and any $k>j$:
+$$\log\biggl\{\frac{p_k(X_1,\dots,X_n)}{p_j(X_1,\dots,X_n)}\biggr\}
+= \log \biggl\{\frac{\prod_{i:X_i \in I_k} h(x_i) \prod_{i:x_i \not\in I_k} c}{\prod_{i:X_i \in I_j} h(x_i) \prod_{i:x_i \not\in I_j}c}\biggr\}
+= \log \biggl\{\frac{\prod_{i:X_i \in I_k} h(x_i) \prod_{i:x_i \in I_j} c \prod_{i:x_i \not\in I_k,I_j} c}
+{\prod_{i:X_i \in I_j} h(x_i) \prod_{i:x_i \in I_k}c \prod_{i:x_i \not\in I_j,I_k} c}\biggr\}$$
+$$= \log \biggl\{\prod_{i:X_i \in I_k} \frac{h(x_i)}{c} \prod_{i:x_i \in I_j} \frac{c}{h(x_i)} \prod_{i:x_i \not\in I_j,I_k}\frac{c}{c}\biggr\}
+= \sum_{i:x_i \in I_k} \log \biggl\{\frac{h(x_i)}{c}\biggr\} - \sum_{i:x_i \in I_j} \log \biggl\{\frac{h(x_i)}{c}\biggr\}$$
+Now note that $a_j \leq x_i$ for all $x_i \in I_j$, implying that $h(a_j) \geq h(x_i)$. Additionally, from the construction of $k=\hat{K}_{n}$, it follows that $x_{(1)} \in I_k$. Consequently:
+$$ \frac{1}{n}\sum_{i:x_i \in I_k} \log \biggl\{\frac{h(x_i)}{c}\biggr\} - \frac{1}{n}\sum_{i:x_i \in I_j} \log \biggl\{\frac{h(x_i)}{c}\biggr\}
+\geq \frac{1}{n}\sum_{i:x_i \in I_k} \log \biggl\{\frac{h(x_i)}{c}\biggr\} - \frac{1}{n}\sum_{i:x_i \in I_j} \log \biggl\{\frac{h(a_j)}{c}\biggr\}$$
+$$=  \frac{1}{n}\sum_{i:x_{(i)} \in I_k} \log \biggl\{\frac{h(x_{(i)})}{c}\biggr\} - \frac{1}{n} v_{jn} \log \biggl\{\frac{h(a_j)}{c}\biggr\}$$
+$$= \frac{1}{n}\biggl(\log \biggl\{\frac{h(x_{(1)})}{c}\biggr\}+\sum_{i>1:x_{(i)} \in I_k} \log \biggl\{\frac{h(x_{(i)})}{c}\biggr\}\biggr) - \frac{1}{n} v_{jn} \log \biggl\{\frac{h(a_j)}{c}\biggr\}$$
+$$\geq \frac{1}{n} \log \biggl\{\frac{h(x_{(1)})}{c}\biggr\} - \frac{1}{n} v_{jn} \log \biggl\{\frac{h(a_j)}{c}\biggr\}$$
+Now, since we've established that $X_{(1)}\overset{p}\to 0$, it follows that $\log h(x_{(1)}) = x_{(1)}^{-2} \to \infty$. Additionally, $v_{jn}/n \to \prob(X_i \in I_j) = 1-c\cdot a_j-c \cdot(1-a_{j-1})$. Hence:
+$$\lim\limits_{n\to\infty} \frac{1}{n} v_{jn} \log \biggl\{\frac{h(a_j)}{c}\biggr\} = [1-c(1+a_j-a_{j-1})] \log \biggl\{\frac{h(a_j)}{c}\biggr\} \hspace{5pt} {\rm and}$$
+$$\lim\limits_{n\to\infty} \frac{1}{n} \log \biggl\{\frac{h(x_{(1)})}{c}\biggr\}
+= \lim\limits_{n\to\infty} \biggl(\frac{x_{(1)}^{-2}}{n} - \frac{\log c}{n}\biggr) = \infty.$$
+Hence:
+$$\log\biggl\{\frac{p_k(X_1,\dots,X_n)}{p_j(X_1,\dots,X_n)}\biggr\}
+\geq \frac{1}{n} \log \biggl\{\frac{h(x_{(1)})}{c}\biggr\} - \frac{1}{n} v_{jn} \log \biggl\{\frac{h(a_j)}{c}\biggr\}
+\to \infty. \hspace{10 pt} \square$$ \\
+
+\noindent
+e. Using the results from above, it is clear now that:
+$$\prob(\hat{K}_{ML} > k^*) = \prob(p_{\hat{K}_n}(X_1,\dots,X_n) > p_{k^*}(X_1,\dots,X_n)) \to 1. \hspace{10 pt} \square $$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%Problem 3
+\pagebreak
+\noindent
+(3) To find $\hat\theta_{ML}$ we want:
+$$\hat\theta_{ML} = \arg\max_{\theta\in\mathbb{Z}}\prod\limits_{i=1}^n \frac{1}{2}e^{-\frac{(x_i-\theta)^2}{2}}
+= \arg\max_{\theta\in\mathbb{Z}} \log (\prod\limits_{i=1}^n \frac{1}{2}e^{-\frac{(x_i-\theta)^2}{2}})
+= \arg\max_{\theta\in\mathbb{Z}} \biggl\{ n\log \frac{1}{2} + \sum\limits_{i=1}^n -\frac{(x_i-\theta)^2}{2} \biggr\}$$
+$$= \arg\min_{\theta\in\mathbb{Z}} \biggl| \sum\limits_{i=1}^n (x_i-\theta) \biggr|
+= \arg\min_{\theta\in\mathbb{Z}} \biggl| \theta-\frac{1}{n}\sum\limits_{i=1}^n x_i \biggr|$$
+Note that this implies $|\hat\theta_{ML}-\frac{1}{n}\sum_{i=1}^n x_i| < 0.5$ almost everywhere, since we are choosing $\hat\theta_{ML}$ to be the closest integer to $\frac{1}{n}\sum_{i=1}^n x_i$. Additionally, from the WLLN, $\frac{1}{n}\sum_{i=1}^n x_i \overset{p}\to \theta$.
+Hence:
+$$\prob(|\hat\theta_{ML}-\theta|>\varepsilon) = \prob(|\hat\theta_{ML}-\theta|\geq 1)
+\leq  \prob(|\hat\theta_{ML}-\frac{1}{n}\sum_{i=1}^n x_i|+|\frac{1}{n}\sum_{i=1}^n x_i-\theta|\geq 1)$$
+$$\leq  \prob(0.5+|\frac{1}{n}\sum_{i=1}^n x_i-\theta|\geq 1)
+= \prob(|\frac{1}{n}\sum_{i=1}^n x_i-\theta|\geq 0.5) \to 0. \hspace{10 pt} \square $$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 4
+\noindent
+(4) (a)To find $\hat\theta_{ML}$ we want:
+$$\hat\theta_{ML} = \arg\max_{\theta}\prod\limits_{i=1}^n \frac{1}{\theta}\ind_{\{x_i \leq \theta\}}
+= \arg\max_{\theta} \frac{1}{\theta^n}\ind_{\{x_{(n)} \leq \theta\}}
+= \arg\max_{\theta} \biggl\{ \frac{1}{\theta^n} : \ind_{\{x_{(n)} \leq \theta\}}=1\biggr\}$$
+$$= \arg\min_{\theta} \{ \theta : \ind_{\{x_{(n)} \leq \theta\}}=1\} = X_{(n)}. \hspace{10 pt} \square$$
+(b) Hence:
+$$\prob(|X_{(n)}-\theta|>\varepsilon) = \prob(\theta-X_{(n)} > \varepsilon)
+= \prob(X_{(n)} < \theta-\varepsilon)
+= \prod\limits_{i=1}^n \prob(X_i < \theta - \varepsilon)$$
+$$= \prod\limits_{i=1}^n \frac{\theta-\varepsilon}{\theta}
+= \biggl(\frac{\theta-\varepsilon}{\theta}\biggr)^n \to 0. \hspace{10 pt} \square $$
+(c) Finally:
+$$ \prob\{n^{\alpha}(\theta-X_{(n)}) < t\} = \prob\biggl\{X_{(n)}>\theta-\frac{t}{n^\alpha}\biggr\}
+= 1- \prob\biggl\{X_{(n)} \leq \theta-\frac{t}{n^\alpha}\biggr\}
+= 1- \biggl(\frac{\theta-\frac{t}{n^\alpha}}{\theta}\biggr)^n$$
+$$= 1- \biggl(1-\frac{t/\theta}{n^\alpha }\biggr)^n
+\to 1-e^{-\frac{t}{\theta}}, \hspace{5 pt} {\rm if} \hspace{5 pt} \alpha = 1. $$
+Thus, $n(\theta-X_{(n)}) \overset{d}\to $Exponential$(1/\theta)$. $\square$
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+%PROBLEM 5
+\pagebreak
+\noindent
+%PART A
+(5) (a) Note first that:
+$$\hat\mu_{i ML} = \arg\max_{\mu_i} \biggl\{ \prod\limits_{i=1}^n \prod\limits_{j=1}^d \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x_{ij}-\mu_i)^2}{2\sigma^2}} \biggr\}
+= \arg\max_{\mu_i} \log \biggl(\prod\limits_{i=1}^n \prod\limits_{j=1}^d \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x_{ij}-\mu_i)^2}{2\sigma^2}}\biggr)$$
+$$= \arg\max_{\mu_i} \biggl\{ nd \log \biggl(\frac{1}{\sqrt{2\pi}\sigma}\biggr) + \sum\limits_{i=1}^n\sum\limits_{j=1}^d -\frac{(x_{ij}-\mu_i)^2}{2\sigma^2} \biggr\}$$
+$$= \arg\min_{\mu_i} \biggl|\sum\limits_{j=1}^d \frac{x_{ij}-\mu_i}{\sigma^2} \biggr| 
+= \arg\min_{\mu_i} \biggl|\frac{1}{n}\sum\limits_{j=1}^d x_{ij}-\mu_i \biggr| 
+= \frac{1}{n}\sum\limits_{j=1}^d x_{ij}.$$
+Consequently:
+$$\delta_{ML} = \arg\max_\delta \biggl\{ \prod\limits_{i=1}^n \prod\limits_{j=1}^d \frac{1}{\sqrt{2\pi\delta}}e^{-\frac{(x_{ij}-\mu_{i ML})^2}{2\delta}} \biggr\}
+= \arg\max_\delta \log \biggl(\prod\limits_{i=1}^n \prod\limits_{j=1}^d \frac{1}{\sqrt{2\pi\delta}}e^{-\frac{(x_{ij}-\mu_{i ML})^2}{2\delta}} \biggr)$$
+$$= \arg\max_\delta \biggl\{ nd \log \biggl(\frac{1}{\sqrt{2\pi\delta}}\biggr) + \sum\limits_{i=1}^n\sum\limits_{j=1}^d -\frac{(x_{ij}-\mu_{i ML})^2}{2\delta} \biggr\}$$
+$$= \arg\min_\delta \biggl| \frac{-nd}{2\delta} + \sum\limits_{i=1}^n\sum\limits_{j=1}^d \frac{(x_{ij}-\mu_{i ML})^2}{2\delta^2} \biggr|
+= \arg\min_\delta \biggl| \delta - \frac{1}{nd}\sum\limits_{i=1}^n\sum\limits_{j=1}^d (x_{ij}-\mu_{i ML})^2 \biggr|$$
+$$= \frac{1}{nd}\sum\limits_{i=1}^n\sum\limits_{j=1}^d (x_{ij}-\mu_{i ML})^2. \hspace{10 pt} \square$$
+%PART B
+(b) Note that:
+$$\ex \biggl\{ \frac{1}{d} \sum\limits_{j=1}^d (x_{ij}-\mu_{i ML})^2 \biggr\} 
+= \ex \biggl\{\frac{1}{d} \sum\limits_{j=1}^d (x_{ij}^2-2x_{ij}\mu_{i ML}+\mu_{i ML}^2) \biggr\}$$
+$$= \ex \biggl\{\frac{1}{d} \sum\limits_{j=1}^d x_{ij}^2-2 \frac{1}{d} \sum\limits_{j=1}^dx_{ij}\mu_{i ML}+ \frac{1}{d} \sum\limits_{j=1}^d\mu_{i ML}^2 \biggr\}
+ = \ex \biggl\{\frac{1}{d} \sum\limits_{j=1}^d x_{ij}^2-2 \mu_{i ML} \mu_{i ML}+ \mu_{i ML}^2 \biggr\}$$
+ $$=  \frac{1}{d} \sum\limits_{j=1}^d \ex x_{ij}^2- \ex \mu_{i ML}^2
+ = (\sigma^2+\mu_i^2) - \biggl(\frac{1}{d}\sigma^2+\mu_i^2\biggr)
+ = \frac{d-1}{d} \sigma^2$$
+ Hence, from the Weak Law of Large Numbers:
+ $$\frac{1}{nd}\sum\limits_{i=1}^n\sum\limits_{j=1}^d (x_{ij}-\mu_{i ML})^2 \overset{p}\to \frac{d-1}{d}\sigma^2 \neq \sigma^2. \hspace{10 pt} \square$$
+ % PART C
+(c) The reason the estimator is inconsistent is that it is biased when the dimension goes to infinity for a fixed sample size. \\
+% PART D
+(d) To fix this issue, we simply replace $d$ with $d-1$ in the formula for the estimator:
+$$\delta \overset{\triangle}=  \frac{1}{n(d-1)}\sum\limits_{i=1}^n\sum\limits_{j=1}^d (x_{ij}-\mu_{j ML})^2
+= \frac{d}{d-1} \delta_{ML} \overset{p}\to \frac{d}{d-1} \frac{(d-1)\sigma^2}{d} = \sigma^2. \hspace{10 pt} \square$$
+
+\pagebreak
+
+% PROBLEM 6
+\noindent
+(6) Let $\phi(x,\rho,\theta) = \underset{\theta':||\theta'-\theta||\leq \rho}\inf \overset{\sim}U(x,\theta')$. Then, by the Dominated Convergence Theorem:
+$$\lim\limits_{\rho\to 0} \int \phi(x,\rho\,\theta) dF(x) 
+= \int \lim\limits_{\rho\to 0} \phi(x,\rho,\theta) dF(x)
+= \int \overset{\sim}U(x,\theta) dF(x) = 0.$$
+Hence, it follows that for all $\theta$ and all $\varepsilon>0$, there exists a radius $\rho_\theta$ such that\\ $\ex \phi(x,\rho_\theta,\theta) > -\varepsilon$. Then it follows that the balls $B(\theta,\rho_\theta)$ form an open covering of $\Theta$, for which there exists a finite subcover due to the fact that $\Theta$ is compact. Now, taking $\{ B(\theta_1,\rho_{\theta_1}), \dots, B(\theta_M,\rho_{\theta_M})\}$ as the subcover, we find:
+$$\prob\{\inf\limits_\theta \frac{1}{n}\sum\limits_{i=1}^n \overset{\sim}U(x_i,\theta) < - \varepsilon\}
+\leq \prob\{ \min_{1\leq j\leq M} \frac{1}{n} \sum\limits_{i=1}^n \overset{\sim}\phi(x_i,\rho_j,\theta_j) < -\varepsilon\}$$
+$$\leq \sum\limits_{j=1}^M \prob\{\frac{1}{n} \sum\limits_{i=1}^n \overset{\sim}\phi(x_i,\rho_j,\theta_j) < -\varepsilon\}
+\to 0,$$
+since each of the $M$ terms in the last sum converge to 0. $\square$
+
+\begin{center}
+\line(1,0){450}
+\end{center}
+
+\end{document}
