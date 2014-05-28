@@ -1,4 +1,4 @@
-inference2-solutions
+Inference II Solutions
 ====================
 
-Solutions to the Problem Sets in Statistical Inference Theory II, Spring 2014.
+My solutions to the problem sets in Statistical Inference Theory II, Spring 2014.
